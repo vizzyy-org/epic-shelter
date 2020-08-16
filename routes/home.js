@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.get('/', function(req, res) {
     res.render('home', {
-        test : "hello sir"
+        test : req.ip
     });
 });
 

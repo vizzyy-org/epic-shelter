@@ -2,19 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-
         socket.on('connect', () => {
             console.log("connection child")
         });
     </script>
-    Hello world.
-    <br>
-    <%- test %>
+</head>
+<%- include('nav.html'); -%>
+<body class="mainBackground ">
+    <div class="center">
+        <div class="vertical">
+            <h1 class="color-two">Hello world.</h1>
+            <br>
+            Your IP is: <%- test %>
+        </div>
+    </div>
 </body>
 </html>

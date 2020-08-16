@@ -1,17 +1,30 @@
-const fs = require('fs');
-
 const PORT = 8601;
-const sslPath = "/etc/pki/vizzyy/";
-const sslOptions = {
-  ca: [],
-  key: fs.readFileSync(sslPath + 'server-key.pem'),
-  cert: fs.readFileSync(sslPath + 'server-cert.pem'),
-  requestCert: false,
-  rejectUnauthorized: false
-}
+const environment = "dev";
+envOptions = {
+  dev: {
+    sslPath: "/etc/pki/vizzyy/",
+    sslOptions: {
+      ca: null,
+      key: 'server-key.pem',
+      cert: 'server-cert.pem',
+      requestCert: false,
+      rejectUnauthorized: false
+    }
+  },
+  prod: {
+    sslPath: "/some/prod/path/",
+    sslOptions: {
+      ca: 'ca-cert.pem',
+      key: 'server-key.pem',
+      cert: 'server-cert.pem',
+      requestCert: true,
+      rejectUnauthorized: true
+    }
+  }
+};
 
 module.exports = {
   PORT: PORT,
-  sslOptions: sslOptions,
-  sslPath: sslPath
+  envOptions: envOptions,
+  environment: environment
 };
