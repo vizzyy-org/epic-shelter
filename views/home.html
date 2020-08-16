@@ -8,7 +8,7 @@
     <script>
         const socket = io();
         socket.on('connect', () => {
-            console.log("connection child")
+            socket.emit('page_load', 'Home');
         });
     </script>
 </head>

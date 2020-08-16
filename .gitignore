@@ -1,3 +1,4 @@
 /node_modules
 epic-shelter.iml
 /config/secrets.js
+/config/.env
