@@ -13,6 +13,11 @@ const server = require('https').Server({
 }, app);
 const io = require('socket.io')(server);
 const home = require('./routes/home')
+const logs = require('./routes/logs')
+const door = require('./routes/door')
+const users = require('./routes/users')
+const streams = require('./routes/streams')
+const lights = require('./routes/lights')
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -20,6 +25,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routers
 app.use('/favicon.ico', express.static('./public/favicon.ico'));
+app.use('/lights', lights);
+app.use('/streams', streams);
+app.use('/users', users);
+app.use('/door', door);
+app.use('/logs', logs);
 app.use('/', home);
 
 io.on('connect', socket => {

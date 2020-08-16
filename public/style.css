@@ -36,22 +36,22 @@ body {
 
 .nav-parent {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   width: 100%;
   text-align: center;
   margin: auto;
 }
 .nav-bs {
   /*background-color: #323232;*/
-  font-size: 2em;
-  color: #5cdb95;
+  font-size: 2vw;
+  /*color: #5cdb95;*/
   width: 15vw;
   height: 10vh;
 }
 
 h1 {
   display: block;
-  font-size: 4em;
+  font-size: 5em;
   margin-top: 0.67em;
   margin-bottom: 0.67em;
   margin-left: 0;
@@ -69,8 +69,8 @@ h1 {
 
 .vertical {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 25%;
+  transform: translateY(-25%);
   margin: 0 auto;
   right: 0;
   left: 0;
@@ -78,9 +78,10 @@ h1 {
 
 a.button1{
   display:inline-block;
-  padding:0.35em 1.2em;
-  border:0.1em solid #FFFFFF;
-  margin:0 0.3em 0.3em 0;
+  padding:2.5vh 2vh;
+  /*padding: 20%;*/
+  border:0.1em solid #5cdb95;
+  /*margin:0 0.3em 0.3em 0;*/
   border-radius:0.12em;
   box-sizing: border-box;
   text-decoration:none;
