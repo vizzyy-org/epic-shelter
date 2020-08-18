@@ -44,6 +44,11 @@ passport.deserializeUser(function (user, done) {
 });
 
 const app = express();
+app.set('views', path.join(__dirname, 'views'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+app.use(express.static(path.join(__dirname, 'public')));
+
 const env = config.envOptions[config.environment];
 const server = require('https').Server({
     ca: env.sslOptions.ca ? fs.readFileSync(env.sslPath + env.sslOptions.ca) : [],
@@ -62,9 +67,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Routers
 app.use('/', auth);

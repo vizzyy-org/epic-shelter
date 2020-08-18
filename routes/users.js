@@ -3,16 +3,9 @@ const router = express.Router();
 
 router.get('/', function(req, res) {
     res.render('users', {
+        userProfile: JSON.stringify(req.user, null, 2),
+        title: 'Profile page',
         test : req.ip
-    });
-});
-
-/* GET user profile. */
-router.get('/user', function (req, res, next) {
-    const { _raw, _json, ...userProfile } = req.user;
-    res.render('user', {
-        userProfile: JSON.stringify(userProfile, null, 2),
-        title: 'Profile page'
     });
 });
 
