@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Door</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('connect', () => {
+            socket.emit('page_load', 'Door');
+        });
+    </script>
+</head>
+<%- include('nav.html'); -%>
+<body class="mainBackground ">
+    <div class="center">
+        <div class="vertical">
+            <h1 class="color-two">Door.</h1>
+            <br>
+            Your IP is: <%- test %>
+        </div>
+    </div>
+</body>
+</html>

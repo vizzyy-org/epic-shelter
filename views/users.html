@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%- title %></title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('connect', () => {
+            socket.emit('page_load', 'Users');
+        });
+    </script>
+</head>
+<%- include('nav.html'); -%>
+<body class="mainBackground ">
+    <div class="center">
+        <div class="vertical">
+            <h1 class="color-two">Users.</h1>
+            <br>
+            Your IP is: <%- test %>
+            <br>
+            <%- userProfile %>
+        </div>
+    </div>
+</body>
+</html>

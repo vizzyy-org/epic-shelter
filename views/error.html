@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('connect', () => {
+            socket.emit('page_load', 'Error');
+        });
+    </script>
+</head>
+<%- include('nav.html'); -%>
+<body class="mainBackground ">
+    <div class="center">
+        <div class="vertical">
+            <h1 class="color-two">OOPS.</h1>
+            <br>
+        </div>
+    </div>
+</body>
+</html>
