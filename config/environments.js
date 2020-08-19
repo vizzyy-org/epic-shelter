@@ -1,4 +1,4 @@
-const PORT = 8601;
+const PORT = 443;
 const environment = "dev";
 const log_page_size = 15;
 
@@ -18,15 +18,14 @@ envOptions = {
   prod: {
     sslPath: "/etc/pki/vizzyy/",
     sslOptions: {
-      ca: 'ca-cert.pem',
+      ca: null,
       key: 'server-key.pem',
       cert: 'server-cert.pem',
-      requestCert: true,
-      rejectUnauthorized: true
+      requestCert: false,
+      rejectUnauthorized: false
     },
-    rest_ssl_key: '',
-    rest_ssl_cert: '',
-    rest_ssl_ca: ''
+    rest_ssl_key: 'rest_private_key.pem',
+    rest_ssl_cert: 'rest_public_cert.pem'
   }
 };
 

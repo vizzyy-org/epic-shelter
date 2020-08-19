@@ -3,12 +3,11 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . /usr/src/app
 
-RUN apk --no-cache add g++ groff less python make openssl tzdata py-pip && \
+RUN apk add g++ python make tzdata && \
     npm install && \
-    pip install awscli && \
-    apk del make g++ py-pip
+    apk del make python g++
 
 ENV TZ America/New_York
 
-EXPOSE 8601
+EXPOSE 443
 CMD [ "node", "app" ]
