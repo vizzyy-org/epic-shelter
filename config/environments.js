@@ -1,5 +1,6 @@
 const PORT = 8601;
 const environment = "dev";
+const log_page_size = 15;
 
 envOptions = {
   dev: {
@@ -33,4 +34,5 @@ module.exports = {
   PORT: PORT,
   envOptions: envOptions,
   environment: environment,
+  log_page_size: log_page_size,
 };
