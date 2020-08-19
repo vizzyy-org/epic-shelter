@@ -7,6 +7,7 @@ const secured = require('./helpers/secured');
 const session = require('express-session');
 const config = require('./config/environments')
 const secrets = require('./config/secrets')
+const logging = require('./helpers/logging_helper');
 const home = require('./routes/home')
 const logs = require('./routes/logs')
 const door = require('./routes/door')
@@ -55,7 +56,7 @@ app.use(errors.errorHandler());
 
 io.on('connection', function (socket) {
     socket.on('page_load', function (data) {
-        console.log(data+ " page loaded.");
+        // logging.append_to_log(data+ " page loaded.");
     });
 });
 
@@ -63,7 +64,7 @@ server.listen(config.PORT);
 server.on('listening', function() {
     let addr = server.address();
     let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-    console.log('Listening on ' + bind);
+    logging.append_to_log('Listening on ' + bind);
 });
 
 module.exports = app;

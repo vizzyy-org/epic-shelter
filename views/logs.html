@@ -17,8 +17,13 @@
     <div class="center">
         <div class="vertical">
             <h1 class="color-two">Logs.</h1>
-            <br>
-            Your IP is: <%- test %>
+            <table>
+                <% for (item in log_entries) { %>
+                <tr>
+                    <div><%- log_entries[item].date.toLocaleString() %> - <%- log_entries[item].message %></div>
+                </tr>
+                <% } %>
+            </table>
         </div>
     </div>
 </body>

@@ -1,5 +1,6 @@
 const PORT = 8601;
 const environment = "dev";
+
 envOptions = {
   dev: {
     sslPath: "/etc/pki/vizzyy/",
@@ -14,7 +15,7 @@ envOptions = {
     rest_ssl_cert: 'rest_public_cert.pem'
   },
   prod: {
-    sslPath: "/some/prod/path/",
+    sslPath: "/etc/pki/vizzyy/",
     sslOptions: {
       ca: 'ca-cert.pem',
       key: 'server-key.pem',
@@ -31,5 +32,5 @@ envOptions = {
 module.exports = {
   PORT: PORT,
   envOptions: envOptions,
-  environment: environment
+  environment: environment,
 };
