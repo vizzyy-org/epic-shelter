@@ -9,7 +9,9 @@ envOptions = {
       cert: 'server-cert.pem',
       requestCert: false,
       rejectUnauthorized: false
-    }
+    },
+    rest_ssl_key: 'rest_private_key.pem',
+    rest_ssl_cert: 'rest_public_cert.pem'
   },
   prod: {
     sslPath: "/some/prod/path/",
@@ -19,7 +21,10 @@ envOptions = {
       cert: 'server-cert.pem',
       requestCert: true,
       rejectUnauthorized: true
-    }
+    },
+    rest_ssl_key: '',
+    rest_ssl_cert: '',
+    rest_ssl_ca: ''
   }
 };
 

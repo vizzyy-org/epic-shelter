@@ -17,8 +17,33 @@
     <div class="center">
         <div class="vertical">
             <h1 class="color-two">Lights.</h1>
-            <br>
-            Your IP is: <%- test %>
+            <div>
+                <iframe width="0" height="0" border="0" name="dummyframe"
+                        id="dummyframe" style="width:0; height:0; border:none" ></iframe>
+                <div style="float: left;width:50%;">
+                    <h2>LAMP</h2>
+                    <form action="/lights/bedroom/lamp" target="dummyframe">
+                        <input type="hidden" name="status" value="true" />
+                        <br><input class="nav-bs button1" type="submit" value="ON" height="70" style="width: 66%;">
+                    </form>
+                    <form action="/lights/bedroom/lamp" target="dummyframe">
+                        <input type="hidden" name="status" value="false" />
+                        <br><input class="nav-bs button1" type="submit" value="OFF" height="70" style="width: 66%;">
+                    </form>
+                </div>
+                <div style="float: right;width:50%;">
+                    <h2>XMAS</h2>
+                    <form action="/lights/bedroom/xmas" target="dummyframe">
+                        <input type="hidden" name="status" value="true" />
+                        <br><input class="nav-bs button1" type="submit" value="ON" height="70" style="width:66%;">
+                    </form>
+                    <form action="/lights/bedroom/xmas" target="dummyframe">
+                        <input type="hidden" name="status" value="false" />
+                        <br><input class="nav-bs button1" type="submit" value="OFF" height="70" style="width: 66%;">
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 </body>

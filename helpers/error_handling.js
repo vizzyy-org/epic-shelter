@@ -17,6 +17,8 @@ module.exports = {
     }},
     errorHandler: function () { return function errorHandler(err, req, res, next) {
         res.status(err.status || 500);
+        if (config.environment === 'dev')
+            console.log(err);
         res.render('error', {
             message: err.message,
             error: config.environment === 'dev' ? err : {}

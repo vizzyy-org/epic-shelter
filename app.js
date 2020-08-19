@@ -26,6 +26,7 @@ const server = require('https').Server({
 }, app);
 const io = require('socket.io')(server);
 
+app.set('io', io);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
