@@ -107,3 +107,18 @@ a.button1:hover{
   max-height: 50vh;
   max-width: 90vw;
 }
+
+.seek {
+  text-decoration: none;
+  display: inline-block;
+  padding: 1vh 2vw;
+  background-color: #f1f1f1;
+  color: black;
+  border-radius: 50%;
+}
+
+.seek:hover {
+  background-color: #5cdb95;
+  color: black;
+}
+

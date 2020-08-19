@@ -11,32 +11,6 @@
             socket.emit('page_load', 'Logs');
         });
     </script>
-    <style>
-        a {
-            text-decoration: none;
-            display: inline-block;
-            padding: 1vh 2vw;
-        }
-
-        a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        .previous {
-            background-color: #f1f1f1;
-            color: black;
-        }
-
-        .next {
-            background-color: #5cdb95;
-            color: white;
-        }
-
-        .round {
-            border-radius: 50%;
-        }
-    </style>
 </head>
 <%- include('nav.html'); -%>
 <body class="mainBackground ">
@@ -52,9 +26,9 @@
             </table>
             <br><br>
             <span>
-                <a href="/logs?page_num=<%- page_num-1 %>" class="previous round"><h2>&#8249;</h2></a>
+                <a href="/logs?page_num=<%- page_num-1 %>" class="seek"><h2>&#8249;</h2></a>
                 Page: <%- page_num %>
-                <a href="/logs?page_num=<%- eval(page_num) + eval(1) %>" class="next round"><h2>&#8250;</h2></a>
+                <a href="/logs?page_num=<%- eval(page_num) + eval(1) %>" class="seek"><h2>&#8250;</h2></a>
             </span>
         </div>
     </div>
