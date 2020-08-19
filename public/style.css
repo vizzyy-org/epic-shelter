@@ -102,3 +102,8 @@ a.button1:hover{
     margin:0.4em auto;
     }
 }
+
+.stream {
+  max-height: 50vh;
+  max-width: 90vw;
+}
