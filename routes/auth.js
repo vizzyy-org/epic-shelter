@@ -1,5 +1,4 @@
-// routes/auth.js
-
+const logging = require('../helpers/logging_helper');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -23,6 +22,7 @@ router.get('/callback', function (req, res, next) {
             if (err) { return next(err); }
             const returnTo = req.session.returnTo;
             delete req.session.returnTo;
+            logging.append_to_log(req.user.displayName + " logged in.");
             res.redirect(returnTo || '/users');
         });
     })(req, res, next);

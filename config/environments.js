@@ -1,6 +1,19 @@
+const mysql = require("mysql");
+const fs = require("fs");
 const PORT = 443;
-const environment = "dev";
 const log_page_size = 15;
+const secrets = require('/etc/pki/vizzyy/secrets');
+
+const connection = mysql.createConnection({
+  host     : secrets.HUB_HOST,
+  port     : secrets.database.DB_PORT,
+  user     : secrets.database.DB_USER,
+  password : secrets.database.DB_PASS,
+  database : secrets.database.DB_USER,
+  ssl      : {
+    ca   : fs.readFileSync('/etc/pki/vizzyy/dbpub.crt')
+  }
+});
 
 envOptions = {
   dev: {
@@ -34,4 +47,5 @@ module.exports = {
   envOptions: envOptions,
   environment: environment,
   log_page_size: log_page_size,
+  db: connection
 };

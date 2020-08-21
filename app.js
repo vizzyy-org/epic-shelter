@@ -6,7 +6,7 @@ const userInViews = require('./helpers/userInViews');
 const secured = require('./helpers/secured');
 const session = require('express-session');
 const config = require('./config/environments')
-const secrets = require('./config/secrets')
+const secrets = require('/etc/pki/vizzyy/secrets');
 const logging = require('./helpers/logging_helper');
 const home = require('./routes/home')
 const logs = require('./routes/logs')
@@ -56,7 +56,7 @@ app.use(errors.errorHandler());
 
 io.on('connection', function (socket) {
     socket.on('page_load', function (data) {
-        // logging.append_to_log(data+ " page loaded.");
+        // logging.append_to_log(req.user.displayName + " loaded page " +data);
     });
 });
 

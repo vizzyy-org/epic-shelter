@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <title>Door</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.on('connect', () => {
-            socket.emit('page_load', 'Door');
-        });
-    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css">
+<!--    <script src="/socket.io/socket.io.js"></script>-->
+<!--    <script>-->
+<!--        const socket = io();-->
+<!--        socket.on('connect', () => {-->
+<!--            socket.emit('page_load', 'Door');-->
+<!--        });-->
+<!--    </script>-->
 </head>
 <%- include('nav.html'); -%>
-<body class="mainBackground ">
+<body class="mainBackground">
     <div class="center">
         <div class="vertical">
             <h1 class="color-two">Door.</h1>

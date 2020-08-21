@@ -1,6 +1,6 @@
 const Auth0Strategy = require('passport-auth0');
 const passport = require('passport');
-const secrets = require('./secrets')
+const secrets = require('/etc/pki/vizzyy/secrets');
 
 const strategy = new Auth0Strategy(
     {
