@@ -1,28 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Streams</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.on('connect', () => {
-            socket.emit('page_load', 'Streams');
-        });
-    </script>
-</head>
-<%- include('nav.html'); -%>
-<body class="mainBackground">
-    <div class="center">
-        <div class="vertical">
-<!--            <h1 class="color-two">Streams.</h1>-->
-            <br><br><br><br>
-            <div>
-                <iframe width="0" height="0" border="0" name="dummyframe"
-                        id="dummyframe" style="width:0; height:0; border:none" ></iframe>
-                <img class="stream" src="/streams/door"  alt="door"/>
-            </div>
+<html>
+<%- include('headers.html'); -%>
+<title>Stream</title>
+<body>
+    <div class="mobile-container">
+        <%- include('nav.html'); -%>
+        <br><br><br><br>
+        <div class="flex-container-row">
+            <img class="stream" src="/streams/door"  alt="door"/>
         </div>
     </div>
 </body>

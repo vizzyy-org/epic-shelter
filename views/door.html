@@ -1,34 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Door</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css">
-<!--    <script src="/socket.io/socket.io.js"></script>-->
-<!--    <script>-->
-<!--        const socket = io();-->
-<!--        socket.on('connect', () => {-->
-<!--            socket.emit('page_load', 'Door');-->
-<!--        });-->
-<!--    </script>-->
-</head>
-<%- include('nav.html'); -%>
-<body class="mainBackground">
-    <div class="center">
-        <div class="vertical">
-            <h1 class="color-two">Door.</h1>
-            <div>
-                <iframe width="0" height="0" border="0" name="dummyframe"
-                        id="dummyframe" style="width:0; height:0; border:none" ></iframe>
+<html>
+<%- include('headers.html'); -%>
+<title>Door</title>
+<body>
+<div class="mobile-container">
+    <%- include('nav.html'); -%>
+    <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
+    <div id="outer-box">
+        <div id="inner-box">
+            <div class="flex-container-column">
+                <h1>Door.</h1>
                 <form action="/door/open" target="dummyframe">
-                    <br><input class="nav-bs button1" type="submit" value="OPEN" height="70" style="width: 50%;">
+                    <br><input class="nav-bs" type="submit" value="OPEN">
                 </form>
                 <form action="/door/close" target="dummyframe">
-                    <br><input class="nav-bs button1" type="submit" value="CLOSE" height="70" style="width: 50%;">
+                    <br><input class="nav-bs" type="submit" value="CLOSE">
                 </form>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

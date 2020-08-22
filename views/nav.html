@@ -1,14 +1,24 @@
-<nav>
-    <div>
-        <ul class="Navbar">
-            <li class="Navbarli"><a href="lights" class="Navbarlia">Lights</a></li>
-            <li class="Navbarli"><a href="/" class="Navbarlia">Home</a></li>
-            <li class="Navbarli"><a href="door" class="Navbarlia">Door</a></li>
-        </ul>
-        <ul class="Navbar">
-            <li class="Navbarli"><a href="logs" class="Navbarlia">Logs</a></li>
-            <li class="Navbarli"><a href="streams" class="Navbarlia">Streams</a></li>
-            <li class="Navbarli"><a href="users" class="Navbarlia">Users</a></li>
-        </ul>
+<div class="topnav">
+    <a href="/" class="active">Menu</a>
+    <div id="myLinks">
+        <a href="lights">Lights</a>
+        <a href="/">Home</a>
+        <a href="door">Door</a>
+        <a href="logs">Logs</a>
+        <a href="streams">Streams</a>
+        <a href="users">Users</a>
     </div>
-</nav>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+    </a>
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+    </script>
+</div>

@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.on('connect', () => {
-            socket.emit('page_load', 'Home');
-        });
-    </script>
-</head>
-<%- include('nav.html'); -%>
-<body class="mainBackground ">
-    <div class="center">
-        <div class="vertical">
-            <h1 class="color-two">Home.</h1>
-            Your IP is: <%- test %>
+<html>
+<%- include('headers.html'); -%>
+<title>Home</title>
+<body>
+    <div class="mobile-container">
+        <%- include('nav.html'); -%>
+        <div id="outer-box">
+            <div id="inner-box">
+                <div style="text-align: center;">
+                <h3>Welcome!</h3>
+                Your IP is: <%- test %>
+                </div>
+            </div>
         </div>
     </div>
 </body>

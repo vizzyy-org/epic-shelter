@@ -53,7 +53,7 @@ body {
   /*background-color: #323232;*/
   font-size: 2vw;
   /*color: #5cdb95;*/
-  width: 15vw;
+  width: 30vw;
   height: 10vh;
 }
 
@@ -113,6 +113,7 @@ a.button1:hover{
 .stream {
   max-height: 50vh;
   max-width: 90vw;
+  /*width: 96vw*/
 }
 
 .seek {
@@ -156,4 +157,85 @@ a.button1:hover{
 
 .Navbarlia:hover {
   background-color: #111111;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.mobile-container {
+  max-width: 98vw;
+  margin: auto;
+  background-color: #555;
+  height: 97vh;
+  color: white;
+  border-radius: 10px;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+  position: relative;
+}
+
+.topnav #myLinks {
+  display: none;
+}
+
+.topnav a {
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 5vh;
+  display: block;
+}
+
+.topnav a.icon {
+  background: black;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#inner-box {
+  /*border: 1px solid black;*/
+  width: 100%;
+
+}
+
+#outer-box {
+  /*border: 1px solid red;*/
+  width:100%;
+  height:90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-container-column {
+  /*border: 1px solid purple;*/
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.flex-container-row {
+  /*border: 1px solid purple;*/
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  text-align: center;
+  /*flex-grow: 2;*/
 }

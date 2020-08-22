@@ -1,50 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Lights</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.on('connect', () => {
-            socket.emit('page_load', 'Lights');
-        });
-    </script>
-</head>
-<%- include('nav.html'); -%>
-<body class="mainBackground ">
-    <div class="center">
-        <div class="vertical">
-            <h1 class="color-two">Lights.</h1>
-            <div>
-                <iframe width="0" height="0" border="0" name="dummyframe"
-                        id="dummyframe" style="width:0; height:0; border:none" ></iframe>
-                <div style="float: left;width:50%;">
+<html>
+<%- include('headers.html'); -%>
+<title>Lights</title>
+<body>
+<div class="mobile-container">
+    <%- include('nav.html'); -%>
+    <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
+    <div id="outer-box">
+        <div id="inner-box">
+            <div class="flex-container-row">
+                <div>
                     <h2>LAMP</h2>
                     <form action="/lights/bedroom/lamp" target="dummyframe">
                         <input type="hidden" name="status" value="true" />
-                        <br><input class="nav-bs button1" type="submit" value="ON" height="70" style="width: 66%;">
+                        <br><input class="nav-bs" type="submit" value="ON">
                     </form>
                     <form action="/lights/bedroom/lamp" target="dummyframe">
                         <input type="hidden" name="status" value="false" />
-                        <br><input class="nav-bs button1" type="submit" value="OFF" height="70" style="width: 66%;">
+                        <br><input class="nav-bs" type="submit" value="OFF">
                     </form>
                 </div>
-                <div style="float: right;width:50%;">
+                <div>
                     <h2>XMAS</h2>
                     <form action="/lights/bedroom/xmas" target="dummyframe">
                         <input type="hidden" name="status" value="true" />
-                        <br><input class="nav-bs button1" type="submit" value="ON" height="70" style="width:66%;">
+                        <br><input class="nav-bs" type="submit" value="ON">
                     </form>
                     <form action="/lights/bedroom/xmas" target="dummyframe">
                         <input type="hidden" name="status" value="false" />
-                        <br><input class="nav-bs button1" type="submit" value="OFF" height="70" style="width: 66%;">
+                        <br><input class="nav-bs" type="submit" value="OFF">
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
+</div>
 </body>
 </html>
+
+
+
+
+
+
+
+
