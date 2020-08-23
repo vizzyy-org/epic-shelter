@@ -3,16 +3,17 @@
 <%- include('headers.html'); -%>
 <title>Home</title>
 <body>
-    <div class="mobile-container">
-        <%- include('nav.html'); -%>
-        <div id="outer-box">
-            <div id="inner-box">
-                <div style="text-align: center;">
-                <h3>Welcome!</h3>
-                Your IP is: <%- test %>
-                </div>
+<div class="mobile-container">
+    <%- include('nav.html'); -%>
+    <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
+    <div class="outer-box" id="myBody">
+        <div class="inner-box">
+            <div style="text-align: center;">
+            <h3>Welcome!</h3>
+            Your IP is: <%- test %>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

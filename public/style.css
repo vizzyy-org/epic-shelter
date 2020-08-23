@@ -51,7 +51,7 @@ body {
 }
 .nav-bs {
   /*background-color: #323232;*/
-  font-size: 2vw;
+  font-size: 4vw;
   /*color: #5cdb95;*/
   width: 30vw;
   height: 10vh;
@@ -119,10 +119,12 @@ a.button1:hover{
 .seek {
   text-decoration: none;
   display: inline-block;
-  padding: 1vh 2vw;
+  /*padding: 1vh 2vw;*/
+  height: 10vh;
+  width: 15vw;
   background-color: #f1f1f1;
   color: black;
-  border-radius: 50%;
+  border-radius: 30%;
 }
 
 .seek:hover {
@@ -208,19 +210,20 @@ body {
   color: white;
 }
 
-#inner-box {
+.inner-box {
   /*border: 1px solid black;*/
   width: 100%;
 
 }
 
-#outer-box {
+.outer-box {
   /*border: 1px solid red;*/
   width:100%;
   height:90%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /*align-items: center;*/
+  align-items: normal;
 }
 
 .flex-container-column {

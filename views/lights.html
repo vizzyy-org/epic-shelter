@@ -6,29 +6,38 @@
 <div class="mobile-container">
     <%- include('nav.html'); -%>
     <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
-    <div id="outer-box">
-        <div id="inner-box">
+    <div class="outer-box" id="myBody">
+        <div class="inner-box">
             <div class="flex-container-row">
                 <div>
                     <h2>LAMP</h2>
                     <form action="/lights/bedroom/lamp" target="dummyframe">
                         <input type="hidden" name="status" value="true" />
-                        <br><input class="nav-bs" type="submit" value="ON">
+                        <br><input class="nav-bs" type="submit" value="On">
                     </form>
                     <form action="/lights/bedroom/lamp" target="dummyframe">
                         <input type="hidden" name="status" value="false" />
-                        <br><input class="nav-bs" type="submit" value="OFF">
+                        <br><input class="nav-bs" type="submit" value="Off">
                     </form>
                 </div>
                 <div>
                     <h2>XMAS</h2>
                     <form action="/lights/bedroom/xmas" target="dummyframe">
                         <input type="hidden" name="status" value="true" />
-                        <br><input class="nav-bs" type="submit" value="ON">
+                        <br><input class="nav-bs" type="submit" value="On">
                     </form>
                     <form action="/lights/bedroom/xmas" target="dummyframe">
                         <input type="hidden" name="status" value="false" />
-                        <br><input class="nav-bs" type="submit" value="OFF">
+                        <br><input class="nav-bs" type="submit" value="Off">
+                    </form>
+                </div>
+                <div>
+                    <h2>STRIP</h2>
+                    <form action="/lights/inside">
+                        <br><input class="nav-bs" type="submit" value="Inside">
+                    </form>
+                    <form action="/lights/outside">
+                        <br><input class="nav-bs" type="submit" value="Outside">
                     </form>
                 </div>
             </div>

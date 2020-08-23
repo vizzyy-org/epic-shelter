@@ -1,23 +1,26 @@
 <div class="topnav">
-    <a href="/" class="active">Menu</a>
+    <a href="" class="active">Epic-Shelter</a>
     <div id="myLinks">
-        <a href="lights">Lights</a>
+        <a href="/lights">Lights</a>
         <a href="/">Home</a>
-        <a href="door">Door</a>
-        <a href="logs">Logs</a>
-        <a href="streams">Streams</a>
-        <a href="users">Users</a>
+        <a href="/door">Door</a>
+        <a href="/logs">Logs</a>
+        <a href="/streams">Streams</a>
+        <a href="/users">Users</a>
     </div>
     <a href="javascript:void(0);" class="icon" onclick="myFunction()">
         <i class="fa fa-bars"></i>
     </a>
     <script>
         function myFunction() {
-            var x = document.getElementById("myLinks");
+            let x = document.getElementById("myLinks");
+            let y = document.getElementById("myBody");
             if (x.style.display === "block") {
                 x.style.display = "none";
+                y.style.display = "block";
             } else {
                 x.style.display = "block";
+                y.style.display = "none";
             }
         }
     </script>

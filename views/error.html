@@ -1,24 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Error</title>
-    <link rel="stylesheet" type="text/css" href="/style.css">
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.on('connect', () => {
-            socket.emit('page_load', 'Error');
-        });
-    </script>
-</head>
-<%- include('nav.html'); -%>
-<body class="mainBackground ">
-    <div class="center">
-        <div class="vertical">
-            <h1 class="color-two">OOPS.</h1>
-            <br>
+<html>
+<%- include('headers.html'); -%>
+<title>Error</title>
+<body>
+<div class="mobile-container">
+    <%- include('nav.html'); -%>
+    <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
+    <div id="myBody" class="outer-box">
+        <div class="inner-box">
+            <div class="flex-container-column" style="font-size: 12px">
+                <h2>Error</h2>
+                <div><br></div>
+                <div><br></div>
+                <%- message %>
+            </div>
         </div>
     </div>
+</div>
 </body>
 </html>

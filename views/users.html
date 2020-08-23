@@ -6,14 +6,17 @@
 <div class="mobile-container">
     <%- include('nav.html'); -%>
     <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
-    <div id="outer-box">
-        <div id="inner-box">
-            <div class="flex-container-column">
-                <h1>User Profile</h1>
-                <br>
+    <div id="myBody" class="outer-box">
+        <div class="inner-box">
+            <div class="flex-container-column" style="font-size: 12px">
+                <span>
+                    <img src="<%- userProfile.picture -%>" alt="userImage" style="max-height: 10vh; max-width: 10vw;">
+                    <h2><%- userProfile.displayName -%></h2>
+                </span>
+                <div><br></div>
                 Your IP is: <%- test %>
-                <br>
-                <%- userProfile %>
+                <div><br></div>
+                <%- userProfileParsed %>
             </div>
         </div>
     </div>
