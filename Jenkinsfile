@@ -83,14 +83,14 @@ pipeline {
 
                             try {
                                 def health = sh (
-                                        script: 'curl https://www.vizzyy.com/',
+                                        script: 'curl -k https://www.vizzyy.com/',
                                         returnStdout: true
                                 ).trim()
                                 echo health
-//                                if (health == "{\"status\":\"UP\"}"){
-                                deployed = true
-                                break
-//                                }
+                                if (health == "{\"status\":\"UP\"}"){
+                                    deployed = true
+                                    break
+                                }
                             } catch ( Exception e) {
                                 echo "could not parse"
                                 e.printStackTrace()
@@ -100,8 +100,8 @@ pipeline {
 
                         }
 
-                        if(!deployed)
-                            throw new InvalidParameterException()
+//                        if(!deployed)
+//                            throw new InvalidParameterException()
 
                     }
                 }
