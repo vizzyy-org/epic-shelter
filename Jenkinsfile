@@ -51,7 +51,7 @@ pipeline {
 
                         //ec2 can only be ssh'd through jumpbox
                         sh("""
-                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker rm epic-shelter; docker pull vizzyy/epic-shelter:latest'
+                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker stop epic-shelter; docker rm epic-shelter; docker pull vizzyy/epic-shelter:latest'
                         """)
 
                     }
