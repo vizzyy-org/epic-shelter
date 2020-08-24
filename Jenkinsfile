@@ -14,15 +14,6 @@ try {
     echo "Building from jenkins job..."
 }
 
-String getVersion(){
-    def versionNumber = sh (
-            script: 'cat build.gradle | grep "version = "',
-            returnStdout: true
-    ).trim()
-
-    return versionNumber.substring(10)
-}
-
 pipeline {
     agent any
     stages {
@@ -30,7 +21,7 @@ pipeline {
             steps {
                 script {
                     if (env.Build == "true" && ISSUE_NUMBER) {
-                        prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins triggered $currentBuild.displayName"}""", "spring_react")
+                        prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins triggered $currentBuild.displayName"}""", "epic-shelter")
                     }
                 }
             }
@@ -56,8 +47,6 @@ pipeline {
             steps {
                 script {
                     if (env.Deploy == "true") {
-
-                        currentVersion = getVersion()
 
                         //ec2 can only be ssh'd through jumpbox
                         sh("""
