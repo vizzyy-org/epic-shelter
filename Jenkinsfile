@@ -34,6 +34,7 @@ pipeline {
                         prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/epic-shelter")
 
                         sh('''
+                            rm -rf node_modules
                             docker build -t vizzyy/epic-shelter:latest .;
                             docker tag vizzyy/epic-shelter:latest vizzyy/epic-shelter:latest;
                             docker push vizzyy/epic-shelter:latest
