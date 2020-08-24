@@ -87,7 +87,7 @@ pipeline {
                                         returnStdout: true
                                 ).trim()
                                 echo health
-                                if (health == "{\"status\":\"UP\"}"){
+                                if (health == "Found. Redirecting to /login"){
                                     deployed = true
                                     break
                                 }
@@ -100,8 +100,8 @@ pipeline {
 
                         }
 
-//                        if(!deployed)
-//                            throw new InvalidParameterException()
+                        if(!deployed)
+                            throw new InvalidParameterException()
 
                     }
                 }
