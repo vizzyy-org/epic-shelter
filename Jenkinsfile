@@ -35,7 +35,7 @@ pipeline {
 
                         sh('''
                             rm -rf node_modules
-                            docker build -t vizzyy/epic-shelter:latest .;
+                            docker build -t vizzyy/epic-shelter:latest . --network=host;
                             docker tag vizzyy/epic-shelter:latest vizzyy/epic-shelter:latest;
                             docker push vizzyy/epic-shelter:latest
                         ''')
