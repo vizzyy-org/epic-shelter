@@ -1,3 +1,4 @@
+const { constants } = require('crypto')
 const express = require('express');
 const helmet = require('helmet');
 const fs = require('fs');
@@ -44,7 +45,8 @@ const server = require('https').Server({
         "!SRP",
         "!CAMELLIA"
     ].join(':'),
-    honorCipherOrder: true
+    honorCipherOrder: true,
+    secureOptions: constants.SSL_OP_NO_TLSv1 | constants.SSL_OP_NO_TLSv1_1
 }, app);
 const io = require('socket.io')(server);
 
