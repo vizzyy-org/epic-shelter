@@ -65,7 +65,7 @@ pipeline {
                     if (env.Deploy == "true") {
 
                         sh('''
-                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker run -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:latest'
+                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:latest'
                         ''')
 
                     }

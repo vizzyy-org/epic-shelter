@@ -13,9 +13,4 @@ router.get('/door', function(req, res, next) {
     next();
 }, new MjpegProxy('https://'+secrets.HUB_HOST+'/video').proxyRequest);
 
-router.get('/motion', function(req, res){
-    logging.append_to_log(req.user.displayName + " opened motion page.");
-    res.render('motion');
-});
-
 module.exports = router;

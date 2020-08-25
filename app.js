@@ -13,6 +13,7 @@ const logs = require('./routes/logs')
 const door = require('./routes/door')
 const users = require('./routes/users')
 const streams = require('./routes/streams')
+const motion = require('./routes/motion')
 const lights = require('./routes/lights')
 const auth = require('./routes/auth');
 const errors = require('./helpers/error_handling')
@@ -46,6 +47,7 @@ app.use(secured()); // everything after this is secured
 app.use(userInViews());
 app.use('/lights', lights);
 app.use('/streams', streams);
+app.use('/motion', motion);
 app.use('/users', users);
 app.use('/door', door);
 app.use('/logs', logs);
