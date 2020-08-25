@@ -23,8 +23,7 @@
     let xhttp = new XMLHttpRequest();
 
     function forward() {
-        console.log("forward");
-        var path = "/motion/next";
+        let path = "/motion/next";
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("image").innerHTML = "<img style=\"max-width:100%;max-height:100%;\" src=\"data:image/gif;base64,"+this.responseText+"\">";
@@ -35,8 +34,7 @@
     }
 
     function backward() {
-        console.log("backward");
-        var path = "/motion/prev";
+        let path = "/motion/prev";
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("image").innerHTML = "<img style=\"max-width:100%;max-height:100%;\" src=\"data:image/gif;base64,"+this.responseText+"\">";
