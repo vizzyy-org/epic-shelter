@@ -18,7 +18,7 @@ router.get('/login', passport.authenticate('auth0', {
 router.get('/callback', function (req, res, next) {
     console.log("/callback endpoint 1");
     passport.authenticate('auth0', function (err, user, info) {
-        console.log("/callback endpoint 1");
+        console.log("/callback endpoint 2");
         if (err) {
             console.log("/callback endpoint error");
             console.log(err);
@@ -26,6 +26,8 @@ router.get('/callback', function (req, res, next) {
         }
         if (!user) {
             console.log("no user present from JWT");
+            console.log(info);
+            console.log("user: " + user);
             return res.redirect('/login');
         }
         req.logIn(user, function (err) {
