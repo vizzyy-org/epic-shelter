@@ -1,6 +1,6 @@
 const express = require('express');
 const logging = require('../helpers/logging_helper');
-const {MjpegProxy} = require("../helpers/mjpeg-proxy");
+const {MjpegProxy} = require("../helpers/mjpeg_proxy");
 const secrets = require('/etc/pki/vizzyy/secrets');
 const router = express.Router();
 

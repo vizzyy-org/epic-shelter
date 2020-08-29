@@ -11,14 +11,14 @@ router.get('/', function(req, res) {
 
 router.get('/open', function(req, res) {
     rest_helper.mutual_auth_call(
-        "https://" + secrets.HUB_HOST + '/door/open?entry=OPENED: OVERRIDE BY UI',
+        "https://" + secrets.HUB_HOST + '/door/open?entry=OPENED: OVERRIDE BY UI ' + req.user.displayName,
         'GET',
         {}, req, res);
 });
 
 router.get('/close', function(req, res) {
     rest_helper.mutual_auth_call(
-        "https://" + secrets.HUB_HOST + '/door/close?entry=OPENED: OVERRIDE BY UI',
+        "https://" + secrets.HUB_HOST + '/door/close?entry=CLOSED: by ' + req.user.displayName,
         'GET',
         {}, req, res);
 });
