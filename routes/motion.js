@@ -38,7 +38,7 @@ function getMotionBuffer(){
     else
         console.log("BLOB data found.");
 
-    return new Buffer(  record.Image  ).toString('base64');
+    return Buffer.from(record.Image).toString('base64');
 }
 
 module.exports = router;

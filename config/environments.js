@@ -49,5 +49,6 @@ module.exports = {
   environment: environment,
   log_page_size: log_page_size,
   sdb: sconnection,
-  db_config: db_config
+  db_config: db_config,
+  secrets: secrets
 };
