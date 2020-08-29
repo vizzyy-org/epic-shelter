@@ -48,7 +48,6 @@ module.exports = {
   envOptions: envOptions,
   environment: environment,
   log_page_size: log_page_size,
-  db: connection,
   sdb: sconnection,
   db_config: db_config
 };
