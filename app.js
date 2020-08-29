@@ -62,6 +62,7 @@ app.use(helmet.hsts({
 }));
 app.use(session({
     secret: secrets.sessionSecret,
+    proxy: true,
     cookie: {
         secure: true,
         sameSite: false
@@ -69,6 +70,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+app.set('trust proxy', 1);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', auth);
