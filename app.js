@@ -62,7 +62,10 @@ app.use(helmet.hsts({
 }));
 app.use(session({
     secret: secrets.sessionSecret,
-    cookie: {secure: true},
+    cookie: {
+        secure: true,
+        sameSite: false
+    },
     resave: false,
     saveUninitialized: true
 }));
