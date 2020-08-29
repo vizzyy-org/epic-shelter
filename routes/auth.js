@@ -10,17 +10,33 @@ var querystring = require('querystring');
 router.get('/login', passport.authenticate('auth0', {
     scope: 'openid email profile'
 }), function (req, res) {
+    console.log("/login endpoint");
     res.redirect('/');
 });
 
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
 router.get('/callback', function (req, res, next) {
+    console.log("/callback endpoint 1");
     passport.authenticate('auth0', function (err, user, info) {
-        if (err) { return next(err); }
-        if (!user) { return res.redirect('/login'); }
+        console.log("/callback endpoint 1");
+        if (err) {
+            console.log("/callback endpoint error");
+            console.log(err);
+            return next(err);
+        }
+        if (!user) {
+            console.log("no user present from JWT");
+            return res.redirect('/login');
+        }
         req.logIn(user, function (err) {
-            if (err) { return next(err); }
+            console.log("req.logIn");
+            if (err) {
+                console.log("req.logIn error");
+                console.log(err);
+                return next(err);
+            }
             const returnTo = req.session.returnTo;
+            console.log("returnTo: "+ returnTo);
             delete req.session.returnTo;
             logging.append_to_log(req.user.displayName + " logged in.");
             res.redirect(returnTo || '/users');
@@ -32,15 +48,15 @@ router.get('/callback', function (req, res, next) {
 router.get('/logout', (req, res) => {
     req.logout();
 
-    var returnTo = req.protocol + '://' + req.hostname;
-    var port = req.connection.localPort;
+    let returnTo = req.protocol + '://' + req.hostname;
+    let port = req.connection.localPort;
     if (port !== undefined && port !== 80 && port !== 443) {
         returnTo += ':' + port;
     }
-    var logoutURL = new url.URL(
+    let logoutURL = new url.URL(
         util.format('https://%s/v2/logout', process.env.AUTH0_DOMAIN)
     );
-    var searchString = querystring.stringify({
+    let searchString = querystring.stringify({
         client_id: process.env.AUTH0_CLIENT_ID,
         returnTo: returnTo
     });
