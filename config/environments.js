@@ -1,4 +1,3 @@
-const mysql = require("mysql");
 const smysql = require('sync-mysql');
 const fs = require("fs");
 const PORT = 443;
@@ -15,7 +14,6 @@ const db_config = {
   }
 };
 
-const connection = mysql.createConnection(db_config);
 const sconnection = new smysql(db_config);
 
 envOptions = {
