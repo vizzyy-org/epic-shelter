@@ -64,11 +64,13 @@ app.use(session({
     secret: secrets.sessionSecret,
     proxy: true,
     cookie: {
-        secure: true,
-        sameSite: false
+        // secure: true,
+        sameSite: false,
+        httpOnly: true,
     },
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    name: 'session'
 }));
 app.set('trust proxy', 1);
 app.use(passport.initialize());
