@@ -60,11 +60,12 @@ app.use(helmet.hsts({
     includeSubDomains: true,
     force: true
 }));
+app.set('trust proxy', 1);
 app.use(session({
     secret: secrets.sessionSecret,
-    proxy: true,
+    // proxy: true,
     cookie: {
-        // secure: true,
+        secure: true,
         sameSite: false,
         httpOnly: true,
     },
@@ -72,7 +73,7 @@ app.use(session({
     saveUninitialized: true,
     name: 'session'
 }));
-app.set('trust proxy', 1);
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', auth);
