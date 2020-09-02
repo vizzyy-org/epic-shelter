@@ -30,18 +30,18 @@ pipeline {
         stage("Build") {
             steps {
                 script {
-                    if (env.Build == "true") {
+                    nodejs(nodeJSInstallationName: 'Node 11.X') {
                         prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/epic-shelter")
-
-                        if(env.DeleteNodeModules == "true") {
-                            sh "rm -rf node_modules"
+                        if (env.Build == "true") {
+                            sh 'npm config ls'
+                            if (env.DeleteNodeModules == "true") {
+                                sh "rm -rf node_modules"
+                            }
+                            sh('''
+                                npm i
+                                docker build -t vizzyy/epic-shelter:latest . --network=host;
+                            ''')
                         }
-
-                        sh('''
-                            source ~/.nvm/nvm.sh; nvm use || nvm install && nvm use
-                            npm i
-                            docker build -t vizzyy/epic-shelter:latest . --network=host;
-                        ''')
                     }
                 }
             }
@@ -50,14 +50,16 @@ pipeline {
         stage("Test") {
             steps {
                 script {
-                    if (env.Test == "true") {
+                    nodejs(nodeJSInstallationName: 'Node 11.X') {
+                        if (env.Test == "true") {
 
-                        echo 'Running Mocha Tests...'
-                        rc = sh(script: "npm test", returnStatus: true)
+                            echo 'Running Mocha Tests...'
+                            rc = sh(script: "npm test", returnStatus: true)
 
-                        if (rc != 0) {
-                            sh "docker rm epic-shelter; docker rmi -f \$(docker images -a -q);"
-                            error("Mocha tests failed!")
+                            if (rc != 0) {
+                                sh "docker rm epic-shelter; docker rmi -f \$(docker images -a -q);"
+                                error("Mocha tests failed!")
+                            }
                         }
                     }
                 }
@@ -73,7 +75,6 @@ pipeline {
                         sh("""
                             docker tag vizzyy/epic-shelter:latest vizzyy/epic-shelter:latest;
                             docker push vizzyy/epic-shelter:latest;
-                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker pull vizzyy/epic-shelter:latest'
                         """)
 
                     }
