@@ -36,8 +36,6 @@ pipeline {
                         sh('''
                             rm -rf node_modules
                             docker build -t vizzyy/epic-shelter:latest . --network=host;
-                            docker tag vizzyy/epic-shelter:latest vizzyy/epic-shelter:latest;
-                            docker push vizzyy/epic-shelter:latest
                         ''')
                     }
                 }
@@ -53,8 +51,7 @@ pipeline {
                         rc = sh(script: "npm test", returnStatus: true)
 
                         if (rc != 0) {
-                            echo "Tests Failed!"
-                            throw new InvalidParameterException()
+                            error("Mocha tests failed!")
                         }
                     }
                 }
@@ -68,6 +65,8 @@ pipeline {
 
                         //ec2 can only be ssh'd through jumpbox
                         sh("""
+                            docker tag vizzyy/epic-shelter:latest vizzyy/epic-shelter:latest;
+                            docker push vizzyy/epic-shelter:latest;
                             ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker stop epic-shelter; docker rm epic-shelter; docker rmi -f \$(docker images -a -q); docker pull vizzyy/epic-shelter:latest'
                         """)
 
