@@ -38,6 +38,7 @@ pipeline {
                         }
 
                         sh('''
+                            . $HOME/.nvm/nvm.sh; nvm use || nvm install && nvm use
                             npm i
                             docker build -t vizzyy/epic-shelter:latest . --network=host;
                         ''')
@@ -49,7 +50,7 @@ pipeline {
         stage("Test") {
             steps {
                 script {
-                    if (env.Build == "true" && env.Test == "true") {
+                    if (env.Test == "true") {
 
                         echo 'Running Mocha Tests...'
                         rc = sh(script: "npm test", returnStatus: true)
