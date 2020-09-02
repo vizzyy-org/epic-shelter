@@ -7,7 +7,6 @@ const passport = require('./config/passport');
 const userInViews = require('./helpers/userInViews');
 const secured = require('./helpers/secured');
 const session = require('express-session');
-const cookieParser = require('cookie-parser');
 const config = require('./config/environments')
 const secrets = require('/etc/pki/vizzyy/secrets');
 const logging = require('./helpers/logging_helper');
@@ -55,17 +54,14 @@ app.set('io', io);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet.hsts({
     maxAge: 31536000000, //one year
     includeSubDomains: true,
     force: true
 }));
-app.set('trust proxy', 1);
 app.use(session({
     secret: secrets.sessionSecret,
-    // proxy: true,
     cookie: {
         secure: true,
         sameSite: false,
@@ -106,4 +102,4 @@ server.on('listening', function() {
     logging.append_to_log('Listening on ' + bind);
 });
 
-module.exports = app;
+module.exports = server;

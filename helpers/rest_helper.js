@@ -24,9 +24,11 @@ module.exports = {
         requestOptions.uri = URL;
         requestOptions.method = method;
         rp(requestOptions).then(function(body) {
-            logging.append_to_log(req.user.displayName + " successfully called: "+URL);
+            let user = req.user ? req.user.displayName : "DEV-USER";
+            logging.append_to_log(user + " successfully called: "+URL);
             socket.emit('state', req.url);
-            res.end();
+            // console.log(body);
+            res.send(body);
         }).catch(err => {
             logging.append_to_log(err);
             res.redirect('/error');
