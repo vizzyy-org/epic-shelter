@@ -35,6 +35,7 @@ pipeline {
 
                         sh('''
                             rm -rf node_modules
+                            npm i
                             docker build -t vizzyy/epic-shelter:latest . --network=host;
                         ''')
                     }
