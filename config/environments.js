@@ -1,8 +1,8 @@
 const smysql = require('sync-mysql');
 const fs = require("fs");
-const PORT = 443;
 const log_page_size = 15;
 const secrets = require('/etc/pki/vizzyy/secrets');
+const PORT = secrets.PORT ? secrets.PORT : 443;
 const db_config = {
   host     : secrets.HUB_HOST,
   port     : secrets.database.DB_PORT,
