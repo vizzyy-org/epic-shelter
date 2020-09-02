@@ -34,7 +34,6 @@ pipeline {
                         prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/epic-shelter")
 
                         sh('''
-                            rm -rf node_modules
                             npm i
                             docker build -t vizzyy/epic-shelter:latest . --network=host;
                         ''')
@@ -46,12 +45,13 @@ pipeline {
         stage("Test") {
             steps {
                 script {
-                    if (env.Test == "true") {
+                    if (env.Build == "true" && env.Test == "true") {
 
                         echo 'Running Mocha Tests...'
                         rc = sh(script: "npm test", returnStatus: true)
 
                         if (rc != 0) {
+                            sh "docker rm epic-shelter; docker rmi -f \$(docker images -a -q);"
                             error("Mocha tests failed!")
                         }
                     }
@@ -68,7 +68,7 @@ pipeline {
                         sh("""
                             docker tag vizzyy/epic-shelter:latest vizzyy/epic-shelter:latest;
                             docker push vizzyy/epic-shelter:latest;
-                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker stop epic-shelter; docker rm epic-shelter; docker rmi -f \$(docker images -a -q); docker pull vizzyy/epic-shelter:latest'
+                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker pull vizzyy/epic-shelter:latest'
                         """)
 
                     }
@@ -82,7 +82,7 @@ pipeline {
                     if (env.Deploy == "true") {
 
                         sh('''
-                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:latest'
+                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker stop epic-shelter; docker rm epic-shelter; docker rmi -f \$(docker images -a -q); docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:latest'
                         ''')
 
                     }
