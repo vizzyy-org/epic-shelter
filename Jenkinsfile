@@ -38,7 +38,7 @@ pipeline {
                         }
 
                         sh('''
-                            . $HOME/.nvm/nvm.sh; nvm use || nvm install && nvm use
+                            source ~/.nvm/nvm.sh; nvm use || nvm install && nvm use
                             npm i
                             docker build -t vizzyy/epic-shelter:latest . --network=host;
                         ''')
