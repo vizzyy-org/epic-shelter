@@ -33,6 +33,10 @@ pipeline {
                     if (env.Build == "true") {
                         prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/epic-shelter")
 
+                        if(env.DeleteNodeModules == "true") {
+                            sh "rm -rf node_modules"
+                        }
+
                         sh('''
                             npm i
                             docker build -t vizzyy/epic-shelter:latest . --network=host;
