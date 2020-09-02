@@ -44,6 +44,23 @@ pipeline {
             }
         }
 
+        stage("Test") {
+            steps {
+                script {
+                    if (env.Test == "true") {
+
+                        echo 'Running Mocha Tests...'
+                        rc = sh(script: "npm test", returnStatus: true)
+
+                        if (rc != 0) {
+                            echo "Tests Failed!"
+                            throw new InvalidParameterException()
+                        }
+                    }
+                }
+            }
+        }
+
         stage("Deploy") {
             steps {
                 script {
