@@ -94,7 +94,7 @@ pipeline {
 
                         def cmd = """
                             docker stop epic-shelter; docker rm epic-shelter;
-                            docker rmi -f \$(docker images -a -q);
+                            yes | docker container prune;
                             docker run --log-driver=journald --log-opt tag=epic-shelter \
                             -d -p 443:443 \
                             -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
@@ -165,7 +165,7 @@ pipeline {
                 def cmd = """
                             docker stop epic-shelter; 
                             docker rm epic-shelter;
-                            docker rmi -f \$(docker images -a -q) || echo 'No images to remove.';
+                            yes | docker container prune;
                             docker run --log-driver=journald --log-opt tag=epic-shelter \
                             -d -p 443:443 \
                             -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
