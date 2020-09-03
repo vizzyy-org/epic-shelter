@@ -158,8 +158,9 @@ pipeline {
                     prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins failed during $currentBuild.displayName"}""", "spring_react")
                 }
                 //Roll back to previous successful image
-                commitHash = sh(script: "echo ~/userContent/epic-shelter-last-success-hash.txt", returnStdout: true)
+                commitHash = sh(script: "cat ~/userContent/epic-shelter-last-success-hash.txt", returnStdout: true)
                 commitHash = commitHash.substring(0,7)
+                echo commitHash
                 def cmd = """
                             docker stop epic-shelter; 
                             docker rm epic-shelter;
