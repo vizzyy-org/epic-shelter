@@ -71,7 +71,6 @@ pipeline {
                 script {
                     if (env.Deploy == "true") {
 
-                        //ec2 can only be ssh'd through jumpbox
                         sh("""
                             docker tag vizzyy/epic-shelter:latest vizzyy/epic-shelter:latest;
                             docker push vizzyy/epic-shelter:latest;
@@ -87,9 +86,14 @@ pipeline {
                 script {
                     if (env.Deploy == "true") {
 
-                        sh('''
-                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com 'docker stop epic-shelter; docker rm epic-shelter; docker rmi -f \$(docker images -a -q); docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:latest'
-                        ''')
+                        cmd = '''
+                            docker stop epic-shelter; docker rm epic-shelter;
+                            docker rmi -f \$(docker images -a -q);
+                            docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:latest
+                        '''
+                        sh("""
+                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
+                        """)
 
                     }
                 }
