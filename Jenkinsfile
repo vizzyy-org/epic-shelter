@@ -95,7 +95,7 @@ pipeline {
                         def cmd = """
                             docker stop epic-shelter; 
                             docker rm epic-shelter;
-                            docker container prune -f;
+                            docker rmi -f \$(docker images -a -q);
                             docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:${commitHash}
                         """
                         sh("""
@@ -163,7 +163,7 @@ pipeline {
                 def cmd = """
                             docker stop epic-shelter; 
                             docker rm epic-shelter;
-                            docker container prune -f;
+                            docker rmi -f \$(docker images -a -q);
                             docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:${commitHash}
                         """
                 sh("""
