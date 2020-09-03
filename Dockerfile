@@ -1,8 +1,10 @@
 FROM node:14-alpine
-RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 ENV TZ America/New_York
-EXPOSE 443
-CMD [ "node", "app" ]
-COPY . /usr/src/app
+
+COPY package*.json ./
 RUN npm install --silent --production
+
+COPY . /usr/src/app
+
+CMD [ "node", "app" ]
