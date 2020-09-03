@@ -9,7 +9,7 @@ router.get('/', function(req, res){
 });
 
 router.get('/door', function(req, res, next) {
-    logging.append_to_log(req.user.displayName + " opened vox stream.");
+    logging.append_to_log(req.user ? req.user.displayName : "DEV USER" + " opened vox stream.");
     next();
 }, new MjpegProxy('https://'+secrets.HUB_HOST+'/video').proxyRequest);
 

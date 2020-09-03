@@ -31,7 +31,7 @@ pipeline {
         stage("Build") {
             steps {
                 script {
-                    nodejs(nodeJSInstallationName: 'Node 11.X') {
+                    nodejs(nodeJSInstallationName: 'Node 14.X') {
                         prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/epic-shelter")
 
                         if (env.Build == "true") {
@@ -53,7 +53,7 @@ pipeline {
         stage("Test") {
             steps {
                 script {
-                    nodejs(nodeJSInstallationName: 'Node 11.X') {
+                    nodejs(nodeJSInstallationName: 'Node 14.X') {
                         if (env.Test == "true") {
 
                             echo 'Running Mocha Tests...'
