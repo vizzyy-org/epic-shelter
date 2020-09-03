@@ -5,6 +5,7 @@ import java.util.logging.Logger
 Logger logger = Logger.getLogger('vizzyy.jenkins.deploy')
 currentBuild.displayName = "Epic-Shelter [ " + currentBuild.number + " ]"
 
+String commitHash = "";
 
 try {
     if (ISSUE_NUMBER)
@@ -32,15 +33,17 @@ pipeline {
                 script {
                     nodejs(nodeJSInstallationName: 'Node 11.X') {
                         prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/epic-shelter")
+
                         if (env.Build == "true") {
                             sh 'npm config ls'
                             if (env.DeleteNodeModules == "true") {
                                 sh "rm -rf node_modules"
                             }
-                            sh('''
+                            commitHash = env.GIT_COMMIT.substring(0,7)
+                            sh("""
                                 npm i
-                                docker build -t vizzyy/epic-shelter:latest . --network=host;
-                            ''')
+                                docker build -t vizzyy/epic-shelter:${commitHash} . --network=host;
+                            """)
                         }
                     }
                 }
@@ -57,7 +60,10 @@ pipeline {
                             rc = sh(script: "npm test", returnStatus: true)
 
                             if (rc != 0) {
-                                sh "docker rm epic-shelter; docker rmi -f \$(docker images -a -q);"
+                                sh """
+                                    docker rm epic-shelter;
+                                    docker rmi -f \$(docker images -a -q);
+                                """
                                 error("Mocha tests failed!")
                             }
                         }
@@ -72,8 +78,8 @@ pipeline {
                     if (env.Deploy == "true") {
 
                         sh("""
-                            docker tag vizzyy/epic-shelter:latest vizzyy/epic-shelter:latest;
-                            docker push vizzyy/epic-shelter:latest;
+                            docker tag vizzyy/epic-shelter:${commitHash} vizzyy/epic-shelter:${commitHash};
+                            docker push vizzyy/epic-shelter:${commitHash};
                         """)
 
                     }
@@ -86,11 +92,14 @@ pipeline {
                 script {
                     if (env.Deploy == "true") {
 
-                        cmd = '''
+                        def cmd = """
                             docker stop epic-shelter; docker rm epic-shelter;
                             docker rmi -f \$(docker images -a -q);
-                            docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:latest
-                        '''
+                            docker run --log-driver=journald --log-opt tag=epic-shelter \
+                            -d -p 443:443 \
+                            -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
+                            --name epic-shelter vizzyy/epic-shelter:${commitHash}
+                        """
                         sh("""
                             ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
                         """)
@@ -105,7 +114,7 @@ pipeline {
                 script {
                     if (env.Deploy == "true") {
 
-                        def deployed = false
+                        Boolean deployed = false
                         for(int i=0; i<12; i++){
 
                             try {
@@ -142,6 +151,7 @@ pipeline {
                     prTools.merge(ISSUE_NUMBER, """{"commit_title": "Jenkins merged $currentBuild.displayName","merge_method": "merge"}""", "spring_react")
                     prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins successfully deployed $currentBuild.displayName"}""", "spring_react")
                 }
+                sh "echo '${env.GIT_COMMIT}' > ~/userContent/epic-shelter-last-success-hash.txt"
             }
         }
         failure {
@@ -149,6 +159,19 @@ pipeline {
                 if (env.Build == "true" && ISSUE_NUMBER) {
                     prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins failed during $currentBuild.displayName"}""", "spring_react")
                 }
+                //Roll back to previous successful image
+                commitHash = sh(script: "echo ~/userContent/epic-shelter-last-success-hash.txt", returnStatus: true)
+                def cmd = """
+                            docker stop epic-shelter; docker rm epic-shelter;
+                            docker rmi -f \$(docker images -a -q);
+                            docker run --log-driver=journald --log-opt tag=epic-shelter \
+                            -d -p 443:443 \
+                            -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
+                            --name epic-shelter vizzyy/epic-shelter:${commitHash}
+                        """
+                sh("""
+                    ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
+                """)
             }
         }
     }
