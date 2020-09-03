@@ -6,17 +6,10 @@
 ![Docker CI](https://github.com/vizzyy-org/epic-shelter/workflows/Docker%20CI/badge.svg?branch=master) 
 
 ```dockerfile
-FROM node:11-alpine
-RUN mkdir -p /usr/src/app
+FROM node:14-alpine
 WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install --silent --production
 COPY . /usr/src/app
-
-RUN apk add g++ python make tzdata
-RUN npm install --silent
-RUN apk del make python g++
-
-ENV TZ America/New_York
-
-EXPOSE 443
 CMD [ "node", "app" ]
 ```
