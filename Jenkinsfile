@@ -41,7 +41,7 @@ pipeline {
                             }
                             commitHash = env.GIT_COMMIT.substring(0,7)
                             sh("""
-                                npm i --quiet
+                                npm i --silent
                                 docker build -t vizzyy/epic-shelter:${commitHash} . --network=host;
                             """)
                         }
