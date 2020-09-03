@@ -5,16 +5,18 @@
 
 ![Docker CI](https://github.com/vizzyy-org/epic-shelter/workflows/Docker%20CI/badge.svg?branch=master) 
 
-```javascript
-const express = require('express');
-const app = express();
+```dockerfile
+FROM node:11-alpine
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY . /usr/src/app
 
-server.listen(config.PORT);
-server.on('listening', function() {
-    let addr = server.address();
-    let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-    logging.append_to_log('Listening on ' + bind);
-});
+RUN apk add g++ python make tzdata
+RUN npm install --silent
+RUN apk del make python g++
 
-module.exports = app;
+ENV TZ America/New_York
+
+EXPOSE 443
+CMD [ "node", "app" ]
 ```
