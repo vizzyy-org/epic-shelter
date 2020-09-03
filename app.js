@@ -71,7 +71,7 @@ app.use(session({
     saveUninitialized: true,
     name: 'session'
 }));
-lhkjhlkjhlk
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', auth);

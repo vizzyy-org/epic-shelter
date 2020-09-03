@@ -41,7 +41,7 @@ pipeline {
                             }
                             commitHash = env.GIT_COMMIT.substring(0,7)
                             sh("""
-                                npm i
+                                npm i --quiet
                                 docker build -t vizzyy/epic-shelter:${commitHash} . --network=host;
                             """)
                         }
@@ -157,10 +157,9 @@ pipeline {
                 if (env.Build == "true" && ISSUE_NUMBER) {
                     prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins failed during $currentBuild.displayName"}""", "spring_react")
                 }
-                //Roll back to previous successful image
                 commitHash = sh(script: "cat ~/userContent/epic-shelter-last-success-hash.txt", returnStdout: true)
                 commitHash = commitHash.substring(0,7)
-                echo commitHash
+                echo "Rolling back to previous successful image. Hash: $commitHash"
                 def cmd = """
                             docker stop epic-shelter; 
                             docker rm epic-shelter;

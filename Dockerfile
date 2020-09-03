@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 
 RUN apk add g++ python make tzdata
-RUN npm install
+RUN npm install --quiet
 RUN apk del make python g++
 
 ENV TZ America/New_York
