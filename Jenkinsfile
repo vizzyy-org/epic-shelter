@@ -93,12 +93,10 @@ pipeline {
                     if (env.Deploy == "true") {
 
                         def cmd = """
-                            docker stop epic-shelter; docker rm epic-shelter;
-                            yes | docker container prune;
-                            docker run --log-driver=journald --log-opt tag=epic-shelter \
-                            -d -p 443:443 \
-                            -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
-                            --name epic-shelter vizzyy/epic-shelter:${commitHash}
+                            docker stop epic-shelter; 
+                            docker rm epic-shelter;
+                            docker container prune -f;
+                            docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:${commitHash}
                         """
                         sh("""
                             ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
@@ -165,11 +163,8 @@ pipeline {
                 def cmd = """
                             docker stop epic-shelter; 
                             docker rm epic-shelter;
-                            yes | docker container prune;
-                            docker run --log-driver=journald --log-opt tag=epic-shelter \
-                            -d -p 443:443 \
-                            -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
-                            --name epic-shelter vizzyy/epic-shelter:${commitHash}
+                            docker container prune -f;
+                            docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:${commitHash}
                         """
                 sh("""
                     ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
