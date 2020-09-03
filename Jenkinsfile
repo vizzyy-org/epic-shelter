@@ -161,9 +161,11 @@ pipeline {
                 }
                 //Roll back to previous successful image
                 commitHash = sh(script: "echo ~/userContent/epic-shelter-last-success-hash.txt", returnStdout: true)
+                commitHash = commitHash.substring(0,7)
                 def cmd = """
-                            docker stop epic-shelter; docker rm epic-shelter;
-                            docker rmi -f \$(docker images -a -q);
+                            docker stop epic-shelter; 
+                            docker rm epic-shelter;
+                            docker rmi -f \$(docker images -a -q) || echo 'No images to remove.';
                             docker run --log-driver=journald --log-opt tag=epic-shelter \
                             -d -p 443:443 \
                             -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
