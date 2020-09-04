@@ -1,11 +1,14 @@
 #! groovy
-import java.security.InvalidParameterException
-import java.util.logging.Logger
 
-Logger logger = Logger.getLogger('vizzyy.jenkins.deploy')
 currentBuild.displayName = "Epic-Shelter [ " + currentBuild.number + " ]"
 
 String commitHash = "";
+GString startContainerCommand = "docker run --log-driver=journald \
+--log-opt tag=epic-shelter \
+--restart always \
+-d -p 443:443 \
+-v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
+--name epic-shelter vizzyy/epic-shelter:${commitHash}"
 
 try {
     if (ISSUE_NUMBER)
@@ -96,7 +99,7 @@ pipeline {
                             docker stop epic-shelter; 
                             docker rm epic-shelter;
                             docker rmi -f \$(docker images -a -q);
-                            docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:${commitHash}
+                            $startContainerCommand
                         """
                         sh("""
                             ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
@@ -126,7 +129,7 @@ pipeline {
                                     break
                                 }
                             } catch ( Exception e) {
-                                echo "could not parse"
+                                echo "Could not parse health check response."
                                 e.printStackTrace()
                             }
 
@@ -135,7 +138,7 @@ pipeline {
                         }
 
                         if(!deployed)
-                            throw new InvalidParameterException()
+                            error("Failed to deploy.")
 
                     }
                 }
@@ -164,7 +167,7 @@ pipeline {
                             docker stop epic-shelter; 
                             docker rm epic-shelter;
                             docker rmi -f \$(docker images -a -q);
-                            docker run --log-driver=journald --log-opt tag=epic-shelter -d -p 443:443 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro --name epic-shelter vizzyy/epic-shelter:${commitHash}
+                            $startContainerCommand
                         """
                 sh("""
                     ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
