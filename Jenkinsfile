@@ -21,7 +21,6 @@ try {
 
 pipeline {
     agent any
-    publishCoverage adapters: [coberturaAdapter('coverage/cobertura-coverage.xml')]
     stages {
         stage("Acknowledge") {
             steps {
@@ -77,6 +76,7 @@ pipeline {
                             }
                         }
                     }
+                    publishCoverage adapters: [coberturaAdapter('coverage/cobertura-coverage.xml')]
                 }
             }
         }
