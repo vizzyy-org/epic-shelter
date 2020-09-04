@@ -2,13 +2,14 @@
 
 currentBuild.displayName = "Epic-Shelter [ " + currentBuild.number + " ]"
 
-String commitHash = "";
+String serviceName = "epic-shelter"
+String commitHash = ""
 String startContainerCommand = "docker run --log-driver=journald \
---log-opt tag=epic-shelter \
+--log-opt tag=$serviceName \
 --restart always \
 -d -p 443:443 \
 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
---name epic-shelter vizzyy/epic-shelter:"
+--name $serviceName vizzyy/$serviceName:"
 
 try {
     if (ISSUE_NUMBER)
@@ -25,7 +26,7 @@ pipeline {
             steps {
                 script {
                     if (env.Build == "true" && ISSUE_NUMBER) {
-                        prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins triggered $currentBuild.displayName"}""", "epic-shelter")
+                        prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins triggered $currentBuild.displayName"}""", serviceName)
                     }
                 }
             }
@@ -35,7 +36,7 @@ pipeline {
             steps {
                 script {
                     nodejs(nodeJSInstallationName: 'Node 14.X') {
-                        prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/epic-shelter")
+                        prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/$serviceName")
 
                         if (env.Build == "true") {
                             sh 'npm config ls'
@@ -45,7 +46,7 @@ pipeline {
                             commitHash = env.GIT_COMMIT.substring(0,7)
                             sh("""
                                 npm i --silent 
-                                docker build -t vizzyy/epic-shelter:${commitHash} . --network=host;
+                                docker build -t vizzyy/$serviceName:${commitHash} . --network=host;
                             """)
                         }
                     }
@@ -64,7 +65,7 @@ pipeline {
 
                             if (rc != 0) {
                                 sh """
-                                    docker rm epic-shelter;
+                                    docker rm $serviceName;
                                     docker rmi -f \$(docker images -a -q);
                                 """
                                 error("Mocha tests failed!")
@@ -81,8 +82,8 @@ pipeline {
                     if (env.Deploy == "true") {
 
                         sh("""
-                            docker tag vizzyy/epic-shelter:${commitHash} vizzyy/epic-shelter:${commitHash};
-                            docker push vizzyy/epic-shelter:${commitHash};
+                            docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:${commitHash};
+                            docker push vizzyy/$serviceName:${commitHash};
                         """)
 
                     }
@@ -96,14 +97,12 @@ pipeline {
                     if (env.Deploy == "true") {
 
                         def cmd = """
-                            docker stop epic-shelter; 
-                            docker rm epic-shelter;
+                            docker stop $serviceName; 
+                            docker rm $serviceName;
                             docker rmi -f \$(docker images -a -q);
                             $startContainerCommand$commitHash
                         """
-                        sh("""
-                            ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
-                        """)
+                        sh("ssh -i ~/ec2pair.pem ec2-user@$env.host '$cmd'")
 
                     }
                 }
@@ -120,7 +119,7 @@ pipeline {
 
                             try {
                                 def health = sh (
-                                        script: 'curl -k https://www.vizzyy.com/',
+                                        script: "curl -k https://www.$env.host/",
                                         returnStdout: true
                                 ).trim()
                                 echo health
@@ -149,29 +148,36 @@ pipeline {
         success {
             script {
                 if (env.Build == "true" && ISSUE_NUMBER) {
-                    prTools.merge(ISSUE_NUMBER, """{"commit_title": "Jenkins merged $currentBuild.displayName","merge_method": "merge"}""", "spring_react")
-                    prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins successfully deployed $currentBuild.displayName"}""", "spring_react")
+                    prTools.merge(ISSUE_NUMBER,
+                            """{
+                                "commit_title": "Jenkins merged $currentBuild.displayName",
+                                "merge_method": "merge"
+                            }""",
+                            serviceName)
+                    prTools.comment(ISSUE_NUMBER,
+                            """{
+                                "body": "Jenkins successfully deployed $currentBuild.displayName"
+                            }""",
+                            serviceName)
                 }
-                sh "echo '${env.GIT_COMMIT}' > ~/userContent/epic-shelter-last-success-hash.txt"
+                sh "echo '${env.GIT_COMMIT}' > ~/userContent/$serviceName-last-success-hash.txt"
             }
         }
         failure {
             script {
                 if (env.Build == "true" && ISSUE_NUMBER) {
-                    prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins failed during $currentBuild.displayName"}""", "spring_react")
+                    prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins failed during $currentBuild.displayName"}""", serviceName)
                 }
-                commitHash = sh(script: "cat ~/userContent/epic-shelter-last-success-hash.txt", returnStdout: true)
+                commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
                 commitHash = commitHash.substring(0,7)
                 echo "Rolling back to previous successful image. Hash: $commitHash"
                 def cmd = """
-                            docker stop epic-shelter; 
-                            docker rm epic-shelter;
+                            docker stop $serviceName; 
+                            docker rm $serviceName;
                             docker rmi -f \$(docker images -a -q);
                             $startContainerCommand$commitHash
                         """
-                sh("""
-                    ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
-                """)
+                sh("ssh -i ~/ec2pair.pem ec2-user@$env.host '$cmd'")
             }
         }
     }
