@@ -3,12 +3,12 @@
 currentBuild.displayName = "Epic-Shelter [ " + currentBuild.number + " ]"
 
 String commitHash = "";
-GString startContainerCommand = "docker run --log-driver=journald \
+String startContainerCommand = "docker run --log-driver=journald \
 --log-opt tag=epic-shelter \
 --restart always \
 -d -p 443:443 \
 -v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
---name epic-shelter vizzyy/epic-shelter:${commitHash}"
+--name epic-shelter vizzyy/epic-shelter:"
 
 try {
     if (ISSUE_NUMBER)
@@ -99,7 +99,7 @@ pipeline {
                             docker stop epic-shelter; 
                             docker rm epic-shelter;
                             docker rmi -f \$(docker images -a -q);
-                            $startContainerCommand
+                            $startContainerCommand$commitHash
                         """
                         sh("""
                             ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
@@ -167,7 +167,7 @@ pipeline {
                             docker stop epic-shelter; 
                             docker rm epic-shelter;
                             docker rmi -f \$(docker images -a -q);
-                            $startContainerCommand
+                            $startContainerCommand$commitHash
                         """
                 sh("""
                     ssh -i ~/ec2pair.pem ec2-user@vizzyy.com '$cmd'
