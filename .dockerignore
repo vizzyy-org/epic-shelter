@@ -6,3 +6,5 @@ npm-debug.log
 Jenkinsfile
 *.md
 *.iml
+coverage
+.nyc_output

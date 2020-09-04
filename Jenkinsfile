@@ -65,7 +65,7 @@ pipeline {
                         if (env.Test == "true") {
 
                             echo 'Running Mocha Tests...'
-                            rc = sh(script: "npm test", returnStatus: true)
+                            rc = sh(script: "npm run test-with-coverage", returnStatus: true)
 
                             if (rc != 0) {
                                 sh """

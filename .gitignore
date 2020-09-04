@@ -2,3 +2,5 @@
 epic-shelter.iml
 /config/secrets.js
 /config/.env
+/coverage
+/.nyc_output
