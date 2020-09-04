@@ -4,7 +4,7 @@ currentBuild.displayName = "Epic-Shelter [ " + currentBuild.number + " ]"
 
 String serviceName = "epic-shelter"
 String commitHash = ""
-String startContainerCommand = "docker run --log-driver=journald \
+GString startContainerCommand = "docker run --log-driver=journald \
 --log-opt tag=$serviceName \
 --restart always \
 -d -p 443:443 \
@@ -26,7 +26,11 @@ pipeline {
             steps {
                 script {
                     if (env.Build == "true" && ISSUE_NUMBER) {
-                        prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins triggered $currentBuild.displayName"}""", serviceName)
+                        prTools.comment(ISSUE_NUMBER,
+                                """{
+                                    "body": "Jenkins triggered $currentBuild.displayName"
+                                }""",
+                                serviceName)
                     }
                 }
             }
@@ -166,7 +170,11 @@ pipeline {
         failure {
             script {
                 if (env.Build == "true" && ISSUE_NUMBER) {
-                    prTools.comment(ISSUE_NUMBER, """{"body": "Jenkins failed during $currentBuild.displayName"}""", serviceName)
+                    prTools.comment(ISSUE_NUMBER,
+                            """{
+                                "body": "Jenkins failed during $currentBuild.displayName"
+                            }""",
+                            serviceName)
                 }
                 commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
                 commitHash = commitHash.substring(0,7)
