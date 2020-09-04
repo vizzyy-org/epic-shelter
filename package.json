@@ -7,7 +7,7 @@
     "clean": "rm -rf node_modules coverage .nyc_output",
     "start": "node app.js",
     "test": "mocha --timeout 10000 --recursive",
-    "test-with-coverage": "nyc --reporter=text --reporter=html mocha --timeout 10000 --recursive"
+    "coverage": "nyc --reporter=text --reporter=html --reporter=cobertura mocha --timeout 10000 --recursive"
   },
   "author": "vizzyy",
   "license": "ISC",

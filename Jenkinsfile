@@ -21,6 +21,7 @@ try {
 
 pipeline {
     agent any
+    publishCoverage adapters: [coberturaAdapter('coverage/cobertura-coverage.xml')]
     stages {
         stage("Acknowledge") {
             steps {
@@ -65,7 +66,7 @@ pipeline {
                         if (env.Test == "true") {
 
                             echo 'Running Mocha Tests...'
-                            rc = sh(script: "npm run test-with-coverage", returnStatus: true)
+                            rc = sh(script: "npm run coverage", returnStatus: true)
 
                             if (rc != 0) {
                                 sh """
