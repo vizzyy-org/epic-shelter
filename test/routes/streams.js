@@ -4,6 +4,7 @@ const server = require('../../app');
 const should = chai.should();
 const sinon = require('sinon');
 const rp = require('request-promise');
+const request = require("request");
 const env = require("../../config/environments");
 const sandbox = sinon.createSandbox();
 
@@ -53,7 +54,7 @@ describe('Streams', () => {
     describe('GET /streams/door', () => {
         it('should hit streams endpoint', (done) => {
             env.secrets.environment = "test";
-            sinon.stub(rp, "Request").returns(new MockRequest());
+            sinon.stub(request, "Request").returns(new MockRequest());
             chai.request(server)
                 .get('/streams/door')
                 .end((err, res) => {

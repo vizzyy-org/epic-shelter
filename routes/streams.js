@@ -4,6 +4,7 @@ const secrets = require('/etc/pki/vizzyy/secrets');
 const rest_helper = require('../helpers/rest_helper')
 const router = express.Router();
 const rp = require("request-promise");
+const request = require("request");
 const env = require('../config/environments')
 
 router.get('/', function (req, res) {
@@ -17,7 +18,9 @@ router.get('/door', (req, res) => {
     requestOptions.uri = reqUrl;
     requestOptions.json = false;
 
-    let stream = rp(requestOptions);
+    // Request-Promise docs recommend using Request for piping streams
+    // to avoid large memory usage
+    let stream = request(requestOptions);
     stream.on('error', console.log);
     stream.pipe(res);
     // When page is closed/changed
