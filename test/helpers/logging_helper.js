@@ -10,7 +10,7 @@ const rp = require('request-promise');
 
 before(function () {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    mockMysql.expects('createConnection').thrice().returns({
+    mockMysql.expects('createConnection').atLeast(1).returns({
         connect: () => {
             console.log('Successfully connected');
         },

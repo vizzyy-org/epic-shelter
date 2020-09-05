@@ -3,7 +3,8 @@ const logging = require('../helpers/logging_helper');
 const secrets = require('/etc/pki/vizzyy/secrets');
 const rest_helper = require('../helpers/rest_helper')
 const router = express.Router();
-const request = require("request-promise");
+const rp = require("request-promise");
+const env = require('../config/environments')
 
 router.get('/', function (req, res) {
     res.render('streams');
@@ -16,21 +17,18 @@ router.get('/door', (req, res) => {
     requestOptions.uri = reqUrl;
     requestOptions.json = false;
 
-    let pipe = request(requestOptions).pipe(res);
+    let stream = rp(requestOptions);
+    stream.on('error', console.log);
+    stream.pipe(res);
+    // When page is closed/changed
+    req.on('close', () => {
+        stream.abort();
+    });
 
-    pipe.on('error', function () {
-        console.log('error handling is needed because pipe will break once pipe.end() is called')
-    });
-    //client quit normally
-    req.on('end', function () {
-        console.log("end - Pipe end");
-        pipe.end();
-    });
-    //client quit unexpectedly
-    req.on('close', function () {
-        console.log("close - Pipe end");
-        pipe.end();
-    });
+    //Limit resources used -- 60000ms = 1 minute
+    let timeout = 60000 * parseInt(env.envOptions[secrets.environment].stream_limit_minutes);
+    console.log(timeout);
+    setTimeout(() => { stream.abort() }, timeout);
 })
 
 

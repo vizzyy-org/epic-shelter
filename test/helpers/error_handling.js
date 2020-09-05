@@ -3,7 +3,6 @@ const chaiHttp = require('chai-http');
 const server = require('../../app');
 const should = chai.should();
 const sinon = require('sinon');
-const rp = require('request-promise');
 const sandbox = sinon.createSandbox();
 
 before(function () {

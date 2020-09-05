@@ -31,7 +31,8 @@ module.exports = {
             let offset = (page_num - 1) * page_size;
             db_conn.query('SELECT *  FROM logs ORDER by ID DESC LIMIT '+page_size+' OFFSET ' + offset, function (error, results, fields) {
                 if (error) {
-                    console.log(error);
+                    if(env.secrets.environment === "dev")
+                        console.log(error);
                     res.end();
                 }
                 res.render('logs', {
