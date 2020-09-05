@@ -1,7 +1,7 @@
 const config = require('../config/environments')
 
 module.exports = {
-    authFailure: function () { return function authFailure(req, res, next) {
+    queryErrors: function () { return function authFailure(req, res, next) {
         if (req && req.query && req.query.error) {
             req.flash('error', req.query.error);
         }
@@ -11,7 +11,7 @@ module.exports = {
         return next();
     }},
     pageNotFound: function () { return function pageNotFound(req, res, next) {
-        const err = new Error('Not Found');
+        const err = new Error('404 -- Page Not Found.');
         err.status = 404;
         return next(err);
     }},
@@ -20,6 +20,12 @@ module.exports = {
         if (config.environment === 'dev')
             console.log(err);
         res.render('error', {
+            locals: {
+                message: {
+                    error: req.flash('error'),
+                    error_description: req.flash('error_description')
+                }
+            },
             message: err.message,
             error: config.environment === 'dev' ? err : {}
         });

@@ -3,7 +3,7 @@ const mysql = require("mysql");
 
 module.exports = {
     append_to_log: function (entry_text){
-        if (env.secrets.environment === "prod") {
+        if (["prod", "test"].includes(env.secrets.environment)) {
             try {
                 let db_conn = mysql.createConnection(env.db_config);
                 console.log(entry_text);
@@ -14,7 +14,7 @@ module.exports = {
                         return error
                     }
                     // console.log(results);
-                    console.log(query.sql);
+                    // console.log(query.sql);
                     return results;
                 });
             } catch (e) {

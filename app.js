@@ -1,6 +1,8 @@
 const { constants } = require('crypto')
 const express = require('express');
 const helmet = require('helmet');
+const flash = require('connect-flash');
+const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const path = require('path');
 const passport = require('./config/passport');
@@ -60,6 +62,7 @@ app.use(helmet.hsts({
     includeSubDomains: true,
     force: true
 }));
+app.use(cookieParser(secrets.sessionSecret));
 app.use(session({
     secret: secrets.sessionSecret,
     cookie: {
@@ -74,6 +77,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 app.use('/', auth);
 app.use('/favicon.ico', express.static('./public/favicon.ico'));
 app.use(secured()); // everything after this is secured
@@ -85,7 +89,7 @@ app.use('/users', users);
 app.use('/door', door);
 app.use('/logs', logs);
 app.use('/', home);
-app.use(errors.authFailure());
+app.use(errors.queryErrors());
 app.use(errors.pageNotFound());
 app.use(errors.errorHandler());
 

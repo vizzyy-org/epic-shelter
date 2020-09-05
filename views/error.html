@@ -12,7 +12,18 @@
                 <h2>Error</h2>
                 <div><br></div>
                 <div><br></div>
-                <%- message %>
+                <% if(locals.message){ %>
+                <div class="alert alert-success" role="alert">
+                    <strong><%- message %></strong>
+                    <br>
+                    <br>
+                    <br>
+                    <%=locals.message.error%>
+                    <br>
+                    <%=locals.message.error_description%>
+                </div>
+                <% } %>
+
             </div>
         </div>
     </div>
