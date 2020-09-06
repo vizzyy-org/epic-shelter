@@ -17,7 +17,7 @@ module.exports = {
     }},
     errorHandler: function () { return function errorHandler(err, req, res, next) {
         res.status(err.status || 500);
-        if (config.environment === 'dev')
+        if (config.secrets.environment === 'dev')
             console.log(err);
         res.render('error', {
             locals: {
@@ -27,7 +27,7 @@ module.exports = {
                 }
             },
             message: err.message,
-            error: config.environment === 'dev' ? err : {}
+            error: config.secrets.environment === 'dev' ? err : {}
         });
     }}
 };

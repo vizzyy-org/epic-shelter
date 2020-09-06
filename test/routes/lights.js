@@ -6,21 +6,22 @@ const sinon = require('sinon');
 const rp = require('request-promise');
 const sandbox = sinon.createSandbox();
 
-before(function () {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-});
-
-after(function () {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
-    server.close();
-})
-
-afterEach( function () {
-    sandbox.restore();
-});
-
 chai.use(chaiHttp);
 describe('Lights', () => {
+
+    before(function () {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    });
+
+    after(function () {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
+        server.close();
+    })
+
+    afterEach( function () {
+        sandbox.restore();
+    });
+
     describe('GET /lights', () => {
         it('it should get main lights page', (done) => {
             chai.request(server)

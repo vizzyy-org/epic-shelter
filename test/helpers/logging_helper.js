@@ -8,35 +8,26 @@ const sandbox = sinon.createSandbox();
 const env = require('../../config/environments');
 const rp = require('request-promise');
 
-before(function () {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    mockMysql.expects('createConnection').atLeast(1).returns({
-        connect: () => {
-            console.log('Successfully connected');
-        },
-        query: (query, entry, callback) => {
-            query.should.be.eq("INSERT INTO logs SET ?");
-            callback("error", "results", {});
-        },
-        end: () => {
-            console.log('Connection ended');
-        }
-    });
-});
-
-after(function () {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
-    mockMysql.restore();
-    server.close();
-})
-
-afterEach( function () {
-    sandbox.restore();
-    env.secrets.environment = "dev";
-});
-
 chai.use(chaiHttp);
 describe('Logging Helper', () => {
+
+    before(function () {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        mockMysql.expects('createConnection').atLeast(1).returns({
+            query: (query, entry, callback) => {
+                // query.should.be.eq("INSERT INTO logs SET ?");
+                callback("error", "results", {});
+            }
+        });
+    });
+
+    after(function () {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
+        mockMysql.restore();
+        server.close();
+        sandbox.restore();
+        env.secrets.environment = "dev";
+    })
 
     describe('append_to_log', () => {
         it('should append to log by toggling light', (done) => {

@@ -51,7 +51,6 @@ envOptions = {
 module.exports = {
     PORT: PORT,
     envOptions: envOptions,
-    environment: environment,
     log_page_size: log_page_size,
     sdb: sconnection,
     db_config: db_config,

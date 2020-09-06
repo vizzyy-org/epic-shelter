@@ -2,24 +2,30 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../../app');
 const should = chai.should();
+const env = require('../../config/environments');
 const sinon = require('sinon');
-const sandbox = sinon.createSandbox();
-
-before(function () {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-});
-
-after(function () {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
-    server.close();
-})
-
-afterEach( function () {
-    sandbox.restore();
-});
+const mockMysql = sinon.mock(require('mysql'));
 
 chai.use(chaiHttp);
 describe('Error Handling', () => {
+
+    before(function () {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        env.secrets.environment = "test";
+        mockMysql.expects('createConnection').atLeast(1).returns({
+            query: (query, entry, callback) => {
+                callback(null, "results", "fields");
+            }
+        });
+    });
+
+    after(function () {
+        env.secrets.environment = "dev";
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
+        mockMysql.restore();
+        server.close();
+    })
+
     describe('GET page that does not exist', () => {
         it('should receive 404', (done) => {
             chai.request(server)

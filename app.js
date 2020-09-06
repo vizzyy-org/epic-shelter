@@ -21,7 +21,7 @@ const motion = require('./routes/motion')
 const lights = require('./routes/lights')
 const auth = require('./routes/auth');
 const errors = require('./helpers/error_handling')
-const env = config.envOptions[config.environment];
+const env = config.envOptions[config.secrets.environment];
 const app = express();
 const server = require('https').Server({
     ca: env.sslOptions.ca ? fs.readFileSync(env.sslPath + env.sslOptions.ca) : [],

@@ -7,25 +7,31 @@ const rp = require('request-promise');
 const request = require("request");
 const env = require("../../config/environments");
 const sandbox = sinon.createSandbox();
-
-before(function () {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-});
-
-after(function () {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
-    server.close();
-})
-
-afterEach( function () {
-    sandbox.restore();
-    env.secrets.environment = "dev";
-});
+const mockMysql = sinon.mock(require('mysql'));
 
 chai.use(chaiHttp);
 describe('Streams', () => {
+
+    before(function () {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        mockMysql.expects('createConnection').atLeast(1).returns({
+            query: (query, entry, callback) => {
+                callback("Query Callback", "results", {});
+            }
+        });
+    });
+
+    after(function () {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
+        mockMysql.restore();
+        server.close();
+        sandbox.restore();
+        env.secrets.environment = "dev";
+    })
+
     describe('GET /streams', () => {
         it('should hit streams endpoint', (done) => {
+            env.secrets.environment = "test";
             sandbox.stub(rp, 'Request').resolves({});
             chai.request(server)
                 .get('/streams')
@@ -39,22 +45,23 @@ describe('Streams', () => {
         });
     });
 
-    class MockRequest {
-        pipe(res) {
-            res.end();
-        }
-        on(){
-            return this;
-        }
-        abort(){
-            return this;
-        }
-    }
-
     describe('GET /streams/door', () => {
+
+        class MockRequest {
+            pipe(res) {
+                res.end();
+            }
+            on(){
+                return this;
+            }
+            abort(){
+                return this;
+            }
+        }
+
         it('should hit streams endpoint', (done) => {
             env.secrets.environment = "test";
-            sinon.stub(request, "Request").returns(new MockRequest());
+            sandbox.stub(request, "Request").returns(new MockRequest());
             chai.request(server)
                 .get('/streams/door')
                 .end((err, res) => {
