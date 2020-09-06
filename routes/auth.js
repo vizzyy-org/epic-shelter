@@ -1,10 +1,10 @@
 const logging = require('../helpers/logging_helper');
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-var util = require('util');
-var url = require('url');
-var querystring = require('querystring');
+const express = require('express');
+const router = express.Router();
+const passport = require('passport');
+const util = require('util');
+const url = require('url');
+const querystring = require('querystring');
 
 // Perform the login, after login Auth0 will redirect to callback
 router.get('/login', passport.authenticate('auth0', {
