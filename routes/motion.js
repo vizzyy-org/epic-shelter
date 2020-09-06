@@ -6,7 +6,7 @@ const router = express.Router();
 let row = 0;
 
 router.get('/', function(req, res) {
-    logging.append_to_log(req.user ? req.user.displayName : "DEV USER" + " opened motion page.");
+    logging.append_to_log("opened motion page.", req.user ? req.user.displayName : "DEV USER");
     row = 0;
     let image = getMotionBuffer();
     res.render('motion', {
@@ -16,13 +16,13 @@ router.get('/', function(req, res) {
 
 router.get('/next', function(req, res) {
     row = row + 1;
-    logging.append_to_log(req.user ? req.user.displayName : "DEV USER" + " viewed motion #"+row+".");
+    logging.append_to_log("viewed motion #"+row+".", req.user ? req.user.displayName : "DEV USER");
     res.send(getMotionBuffer());
 });
 
 router.get('/prev', function(req, res) {
     row = row - 1 >= 0 ? row - 1 : row;
-    logging.append_to_log(req.user ? req.user.displayName : "DEV USER" + " viewed motion #"+row+".");
+    logging.append_to_log( "viewed motion #"+row+".", req.user ? req.user.displayName : "DEV USER");
     res.send(getMotionBuffer());
 });
 

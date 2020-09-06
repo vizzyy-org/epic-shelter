@@ -3,7 +3,6 @@ const logging = require('../helpers/logging_helper');
 const secrets = require('/etc/pki/vizzyy/secrets');
 const rest_helper = require('../helpers/rest_helper')
 const router = express.Router();
-const rp = require("request-promise");
 const request = require("request");
 const env = require('../config/environments')
 
@@ -12,7 +11,7 @@ router.get('/', function (req, res) {
 });
 
 router.get('/door', (req, res) => {
-    logging.append_to_log(req.user ? req.user.displayName : "DEV USER" + " opened vox stream.");
+    logging.append_to_log("opened vox stream.", req.user ? req.user.displayName : "DEV USER");
     let reqUrl = 'https://' + secrets.HUB_HOST + '/video';
     let requestOptions = Object.assign({}, rest_helper.ssl_base_config);
     requestOptions.uri = reqUrl;

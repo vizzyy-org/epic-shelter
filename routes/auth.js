@@ -40,7 +40,7 @@ router.get('/callback', function (req, res, next) {
             const returnTo = req.session.returnTo;
             console.log("returnTo: "+ returnTo);
             delete req.session.returnTo;
-            logging.append_to_log(req.user.displayName + " logged in.");
+            logging.append_to_log( "logged in.", req.user.displayName);
             res.redirect(returnTo || '/users');
         });
     })(req, res, next);

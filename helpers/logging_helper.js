@@ -2,28 +2,27 @@ const env = require('../config/environments');
 const mysql = require("mysql");
 
 module.exports = {
-    append_to_log: function (entry_text){
+    append_to_log: function (entry_text, user = "DEV-LOG"){
+        let user_entry = user ? user + " - " : "" ;
+        let final_entry = user_entry + entry_text;
+
         if (["prod", "test"].includes(env.secrets.environment)) {
             try {
                 let db_conn = mysql.createConnection(env.db_config);
-                console.log(entry_text);
-                let entry = {date: new Date(), message: entry_text, service: "epic-shelter"};
-                let query = db_conn.query('INSERT INTO logs SET ?', entry, function (error, results, fields) {
+                let entry = {date: new Date(), message: final_entry, service: "epic-shelter"};
+                db_conn.query('INSERT INTO logs SET ?', entry, function (error, results, fields) {
                     if (error) {
                         console.log(error);
                         return error
                     }
-                    // console.log(results);
-                    // console.log(query.sql);
                     return results;
                 });
             } catch (e) {
                 console.log(e);
                 return e;
             }
-        } else {
-            console.log("DEV-LOG: "+entry_text);
         }
+        console.log(final_entry);
     },
     query_logs: function (req, res, page_size, page_num){
         try {

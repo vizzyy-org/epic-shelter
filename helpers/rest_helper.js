@@ -25,7 +25,7 @@ module.exports = {
         requestOptions.method = method;
         rp(requestOptions).then(function(body) {
             let user = req.user ? req.user.displayName : "DEV-USER";
-            logging.append_to_log(user + " successfully called: "+URL);
+            logging.append_to_log( "successfully called: " + URL, user);
             socket.emit('state', req.url);
             // console.log(body);
             res.send(body);
