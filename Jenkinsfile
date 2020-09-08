@@ -162,6 +162,7 @@ pipeline {
                             serviceName)
                 }
                 sh "echo '${env.GIT_COMMIT}' > ~/userContent/$serviceName-last-success-hash.txt"
+                junit 'coverage/cobertura-coverage.xml'
             }
         }
         failure {
