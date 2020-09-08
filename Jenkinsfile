@@ -146,7 +146,7 @@ pipeline {
         }
     }
     post {
-        always {]
+        always {
             testsPublishResults(
                     cobertura: [pattern: 'coverage/cobertura-coverage.xml', updateResults: true, archive: true],
             )
