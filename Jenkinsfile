@@ -38,16 +38,11 @@ pipeline {
 
         stage("Build") {
             steps {
-                cleanWs()
                 script {
                     nodejs(nodeJSInstallationName: 'Node 14.X') {
                         prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/$serviceName")
 
                         if (env.Build == "true") {
-                            sh 'npm config ls'
-//                            if (env.DeleteNodeModules == "true") {
-//                                sh "rm -rf node_modules"
-//                            }
                             commitHash = env.GIT_COMMIT.substring(0,7)
                             sh("""
                                 npm i --silent 
@@ -189,6 +184,9 @@ pipeline {
                         """
                 sh("ssh -i ~/ec2pair.pem ec2-user@$env.host '$cmd'")
             }
+        }
+        cleanup { // Cleanup post-flow always executes last
+            deleteDir()
         }
     }
 }
