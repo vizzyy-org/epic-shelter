@@ -146,9 +146,10 @@ pipeline {
         }
     }
     post {
-        always {
-            archiveArtifacts 'coverage/cobertura-coverage.xml'
-            cobertura coberturaReportFile: 'coverage/cobertura-coverage.xml'
+        always {]
+            testsPublishResults(
+                    cobertura: [pattern: 'coverage/cobertura-coverage.xml', updateResults: true, archive: true],
+            )
         }
         success {
             script {
