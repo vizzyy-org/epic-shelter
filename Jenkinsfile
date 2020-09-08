@@ -147,6 +147,7 @@ pipeline {
     }
     post {
         always {
+            archiveArtifacts 'coverage/cobertura-coverage.xml'
             cobertura coberturaReportFile: 'coverage/cobertura-coverage.xml'
         }
         success {
