@@ -146,11 +146,6 @@ pipeline {
         }
     }
     post {
-        always {
-            testsPublishResults(
-                    cobertura: [pattern: 'coverage/cobertura-coverage.xml', updateResults: true, archive: true],
-            )
-        }
         success {
             script {
                 if (env.Build == "true" && ISSUE_NUMBER) {
