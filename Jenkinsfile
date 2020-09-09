@@ -14,7 +14,7 @@ GString startContainerCommand = "docker run --log-driver=journald \
 try {
     if (ISSUE_NUMBER)
         echo "Building from pull request..."
-} catch (Exception e) {
+} catch (Exception ignored) {
     ISSUE_NUMBER = false
     echo "Building from jenkins job..."
 }
@@ -72,8 +72,6 @@ pipeline {
                             }
                         }
                     }
-                    publishCoverage adapters: [istanbulCoberturaAdapter('coverage/cobertura-coverage.xml')]
-                    cobertura(coberturaReportFile: 'coverage/cobertura-coverage.xml', enableNewApi: true)
                 }
             }
         }
@@ -147,6 +145,9 @@ pipeline {
         }
     }
     post {
+        always {
+            publishCoverage adapters: [istanbulCoberturaAdapter('coverage/cobertura-coverage.xml')]
+        }
         success {
             script {
                 if (env.Build == "true" && ISSUE_NUMBER) {
