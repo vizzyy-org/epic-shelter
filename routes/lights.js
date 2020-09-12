@@ -5,21 +5,21 @@ const logging = require("../helpers/logging_helper");
 const router = express.Router();
 
 router.get('/', function(req, res) {
-    logging.append_to_log("opened lights main page.", req.user ? req.user.displayName : "DEV USER");
+    // logging.append_to_log("opened lights main page.", req.user ? req.user.displayName : "DEV USER");
     res.render('lights', {
         test : req.ip
     });
 });
 
 router.get('/inside', function(req, res) {
-    logging.append_to_log("opened lights inside page.", req.user ? req.user.displayName : "DEV USER");
+    // logging.append_to_log("opened lights inside page.", req.user ? req.user.displayName : "DEV USER");
     res.render('lights_strip_inside', {
         test : req.ip
     });
 });
 
 router.get('/outside', function(req, res) {
-    logging.append_to_log("opened lights outside page.", req.user ? req.user.displayName : "DEV USER");
+    // logging.append_to_log("opened lights outside page.", req.user ? req.user.displayName : "DEV USER");
     res.render('lights_strip_outside', {
         test : req.ip
     });
