@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<%- include('headers.html'); -%>
+<title>Lights</title>
+<head>
+    <style>
+        input {
+            width: 50vw;
+            height: 30vh;
+            border: none;
+            font-size: 200%;
+            border-radius: 0;
+            -webkit-appearance: none;
+        @include border-radius(0);
+            background-color: whitesmoke;
+        }
+    </style>
+</head>
+<body>
+<div class="mobile-container">
+    <%- include('nav.html'); -%>
+    <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
+    <div class="outer-box" id="myBody">
+        <div class="inner-box">
+            <div class="flex-container-row">
+                <div>
+                    <h2>XMAS</h2>
+                    <form action="/lights/strip/inside/custom/" target="dummyframe">
+                        <input type="color" name="colorValue">
+                        <br><input type="submit" value="APPLY">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

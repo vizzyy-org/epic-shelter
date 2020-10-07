@@ -1,33 +1,49 @@
 const express = require('express');
 const secrets = require('/etc/pki/vizzyy/secrets');
 const rest_helper = require('../helpers/rest_helper')
-const logging = require("../helpers/logging_helper");
 const router = express.Router();
 
 router.get('/', function(req, res) {
-    // logging.append_to_log("opened lights main page.", req.user ? req.user.displayName : "DEV USER");
-    res.render('lights', {
-        test : req.ip
-    });
+    res.render('lights');
 });
 
+// render inside lights strip control page
 router.get('/inside', function(req, res) {
-    // logging.append_to_log("opened lights inside page.", req.user ? req.user.displayName : "DEV USER");
-    res.render('lights_strip_inside', {
-        test : req.ip
-    });
+    res.render('lights_strip_inside');
 });
 
-router.get('/outside', function(req, res) {
-    // logging.append_to_log("opened lights outside page.", req.user ? req.user.displayName : "DEV USER");
-    res.render('lights_strip_outside', {
-        test : req.ip
-    });
+// render inside lights custom rgb select page
+router.get('/inside/custom', function(req, res) {
+    res.render('lights_strip_inside_custom');
 });
 
+// toggle inside lights strip arrangement
 router.get('/strip/inside', function(req, res) {
     rest_helper.mutual_auth_call(
         "https://" + secrets.HUB_HOST + '/inside/arrange/' + req.query.status,
+        'GET',
+        {}, req, res);
+});
+
+// toggle inside lights strip rgb
+router.get('/strip/inside/custom', function(req, res) {
+    rest_helper.mutual_auth_call(
+        "https://" + secrets.HUB_HOST + '/inside/custom/?colorValue=' + req.query.colorValue,
+        'GET',
+        {}, req, res);
+});
+
+router.get('/outside', function(req, res) {
+    res.render('lights_strip_outside');
+});
+
+router.get('/outside/custom', function(req, res) {
+    res.render('lights_strip_outside_custom');
+});
+
+router.get('/outside/custom/color', function(req, res) {
+    rest_helper.mutual_auth_call(
+        "https://" + secrets.HUB_HOST + '/outside/custom/?colorValue=' + req.query.colorValue,
         'GET',
         {}, req, res);
 });
@@ -52,7 +68,6 @@ router.get('/bedroom/lamp', function(req, res) {
         'GET',
         {}, req, res);
 });
-
 
 
 module.exports = router;
