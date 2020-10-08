@@ -3,9 +3,14 @@ const secrets = require('/etc/pki/vizzyy/secrets');
 const rest_helper = require('../helpers/rest_helper')
 const router = express.Router();
 
+// Render main lights page
+
 router.get('/', function(req, res) {
     res.render('lights');
 });
+
+
+// Inside Light Strip
 
 // render inside lights strip control page
 router.get('/inside', function(req, res) {
@@ -28,10 +33,13 @@ router.get('/strip/inside', function(req, res) {
 // toggle inside lights strip rgb
 router.get('/strip/inside/custom', function(req, res) {
     rest_helper.mutual_auth_call(
-        "https://" + secrets.HUB_HOST + '/inside/custom/?colorValue=' + req.query.colorValue,
+        "https://" + secrets.HUB_HOST + '/inside/custom/?colorValue=%23' + req.query.colorValue.split("#")[1],
         'GET',
         {}, req, res);
 });
+
+
+// Outside Light Strip
 
 router.get('/outside', function(req, res) {
     res.render('lights_strip_outside');
@@ -43,7 +51,7 @@ router.get('/outside/custom', function(req, res) {
 
 router.get('/outside/custom/color', function(req, res) {
     rest_helper.mutual_auth_call(
-        "https://" + secrets.HUB_HOST + '/outside/custom/?colorValue=' + req.query.colorValue,
+        "https://" + secrets.HUB_HOST + '/outside/custom/?colorValue=%23' + req.query.colorValue.split("#")[1],
         'GET',
         {}, req, res);
 });
@@ -54,6 +62,9 @@ router.get('/strip/outside', function(req, res) {
         'GET',
         {}, req, res);
 });
+
+
+// Bedroom lights
 
 router.get('/bedroom/xmas', function(req, res) {
     rest_helper.mutual_auth_call(
