@@ -49,7 +49,7 @@ router.get('/outside/custom', function(req, res) {
     res.render('lights_strip_outside_custom');
 });
 
-router.get('/outside/custom/color', function(req, res) {
+router.get('/strip/outside/custom', function(req, res) {
     rest_helper.mutual_auth_call(
         "https://" + secrets.HUB_HOST + '/outside/custom/?colorValue=%23' + req.query.colorValue.split("#")[1],
         'GET',
