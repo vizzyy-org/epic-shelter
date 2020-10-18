@@ -21,6 +21,17 @@ try {
 
 pipeline {
     agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr:'10'))
+        disableConcurrentBuilds()
+        quietPeriod(0)
+        timestamps()
+    }
+    parameters {
+        booleanParam(name: 'Build', defaultValue: true, description: 'Build latest artifact')
+        booleanParam(name: 'Deploy', defaultValue: true, description: 'Deploy latest artifact')
+        booleanParam(name: 'Test', defaultValue: true, description: 'Run test suite')
+    }
     stages {
         stage("Acknowledge") {
             steps {
@@ -102,7 +113,9 @@ pipeline {
                             docker rmi -f \$(docker images -a -q);
                             $startContainerCommand$commitHash
                         """
-                        sh("ssh -i ~/ec2pair.pem ec2-user@$env.host '$cmd'")
+                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+                        }
 
                     }
                 }
@@ -115,30 +128,32 @@ pipeline {
                     if (env.Deploy == "true") {
 
                         Boolean deployed = false
-                        for(int i=0; i<12; i++){
+                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                            for (int i = 0; i < 12; i++) {
 
-                            try {
-                                def health = sh (
-                                        script: "curl -k https://www.$env.host/",
-                                        returnStdout: true
-                                ).trim()
-                                echo health
-                                if (health == "Found. Redirecting to /login"){
-                                    deployed = true
-                                    break
+                                try {
+                                    def health = sh(
+                                            script: "curl -k https://www.$host/",
+                                            returnStdout: true
+                                    ).trim()
+                                    echo health
+                                    if (health == "Found. Redirecting to /login") {
+                                        deployed = true
+                                        break
+                                    }
+                                } catch (Exception e) {
+                                    echo "Could not parse health check response."
+                                    e.printStackTrace()
                                 }
-                            } catch ( Exception e) {
-                                echo "Could not parse health check response."
-                                e.printStackTrace()
+
+                                sleep time: i, unit: 'SECONDS'
+
                             }
 
-                            sleep time: i, unit: 'SECONDS'
+                            if (!deployed)
+                                error("Failed to deploy.")
 
                         }
-
-                        if(!deployed)
-                            error("Failed to deploy.")
-
                     }
                 }
             }
@@ -184,7 +199,9 @@ pipeline {
                             docker rmi -f \$(docker images -a -q);
                             $startContainerCommand$commitHash
                         """
-                sh("ssh -i ~/ec2pair.pem ec2-user@$env.host '$cmd'")
+                withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                    sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+                }
             }
         }
         cleanup { // Cleanup post-flow always executes last
