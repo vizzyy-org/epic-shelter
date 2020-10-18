@@ -24,7 +24,7 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr:'10'))
         disableConcurrentBuilds()
-        quietPeriod(0)
+        quietPeriod(1)
         timestamps()
     }
     parameters {
