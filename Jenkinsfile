@@ -4,6 +4,7 @@ currentBuild.displayName = "Epic-Shelter [$currentBuild.number]"
 
 String serviceName = "epic-shelter"
 String commitHash = ""
+Boolean deploymentCheckpoint = false
 GString startContainerCommand = "docker run --log-driver=journald \
 --log-opt tag=$serviceName \
 --restart always \
@@ -106,7 +107,7 @@ pipeline {
             steps {
                 script {
                     if (env.Deploy == "true") {
-
+                        deploymentCheckpoint = true;
                         def cmd = """
                             docker stop $serviceName;
                             docker rm $serviceName;
@@ -190,17 +191,19 @@ pipeline {
                             }""",
                             serviceName)
                 }
-                commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
-                commitHash = commitHash.substring(0,7)
-                echo "Rolling back to previous successful image. Hash: $commitHash"
-                def cmd = """
+                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
+                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
+                    commitHash = commitHash.substring(0, 7)
+                    echo "Rolling back to previous successful image. Hash: $commitHash"
+                    def cmd = """
                             docker stop $serviceName;
                             docker rm $serviceName;
                             docker rmi -f \$(docker images -a -q);
                             $startContainerCommand$commitHash
                         """
-                withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                    sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+                    withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                        sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+                    }
                 }
             }
         }

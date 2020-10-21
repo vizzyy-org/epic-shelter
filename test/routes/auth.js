@@ -57,7 +57,7 @@ describe('Auth', () => {
                 .end((err, res) => {
                     if(err) { console.log(err); }
                     // console.log(res.text);
-                    res.should.have.status(400);
+                    res.should.have.status(403);
                     done();
                 });
         });
