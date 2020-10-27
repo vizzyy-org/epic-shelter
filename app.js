@@ -54,6 +54,7 @@ app.use(helmet.hsts({
     force: true
 }));
 
+app.use(x509());
 app.use('/favicon.ico', express.static('./public/favicon.ico'));
 app.use('/lights', lights);
 app.use('/streams', streams);
@@ -62,7 +63,6 @@ app.use('/users', users);
 app.use('/door', door);
 app.use('/logs', logs);
 app.use('/', home);
-app.use(x509());
 app.use(errors.queryErrors());
 app.use(errors.pageNotFound());
 app.use(errors.errorHandler());
