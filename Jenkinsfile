@@ -135,7 +135,7 @@ pipeline {
 
                                 try {
                                     def health = sh(
-                                            script: "curl -k --cert-type P12 --cert client_keypair.p12:$pw https://www.$host/",
+                                            script: "curl -k --cert-type P12 --cert ~/client_keypair.p12:$pw https://www.$host/",
                                             returnStdout: true
                                     ).trim()
                                     echo health
