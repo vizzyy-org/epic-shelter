@@ -6,7 +6,7 @@ module.exports = function () {
 
         // req.isAdmin = constants.admins.includes(incoming);
         // req.isOwner = constants.owner.includes(incoming);
-        req.user.displayName = incoming ;
+        req.user = { displayName: incoming };
         next();
     };
 };
