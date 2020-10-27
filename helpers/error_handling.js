@@ -3,10 +3,10 @@ const config = require('../config/environments')
 module.exports = {
     queryErrors: function () { return function authFailure(req, res, next) {
         if (req && req.query && req.query.error) {
-            req.flash('error', req.query.error);
+            // req.flash('error', req.query.error);
         }
         if (req && req.query && req.query.error_description) {
-            req.flash('error_description', req.query.error_description);
+            // req.flash('error_description', req.query.error_description);
         }
         return next();
     }},
@@ -22,8 +22,8 @@ module.exports = {
         res.render('error', {
             locals: {
                 message: {
-                    error: req.flash('error'),
-                    error_description: req.flash('error_description')
+                    // error: req.flash('error'),
+                    // error_description: req.flash('error_description')
                 }
             },
             message: err.message,
