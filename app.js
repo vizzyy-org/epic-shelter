@@ -1,16 +1,9 @@
 const { constants } = require('crypto')
 const express = require('express');
 const helmet = require('helmet');
-const flash = require('connect-flash');
-const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const path = require('path');
-const passport = require('./config/passport');
-const userInViews = require('./helpers/userInViews');
-const secured = require('./helpers/secured');
-const session = require('express-session');
-const config = require('./config/environments')
-const secrets = require('/etc/pki/vizzyy/secrets');
+const config = require('./config/environments');
 const logging = require('./helpers/logging_helper');
 const home = require('./routes/home')
 const logs = require('./routes/logs')
@@ -19,7 +12,6 @@ const users = require('./routes/users')
 const streams = require('./routes/streams')
 const motion = require('./routes/motion')
 const lights = require('./routes/lights')
-const auth = require('./routes/auth');
 const errors = require('./helpers/error_handling')
 const env = config.envOptions[config.secrets.environment];
 const app = express();
@@ -50,9 +42,7 @@ const server = require('https').Server({
     honorCipherOrder: true,
     secureOptions: constants.SSL_OP_NO_TLSv1 | constants.SSL_OP_NO_TLSv1_1
 }, app);
-const io = require('socket.io')(server);
 
-app.set('io', io);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -62,26 +52,20 @@ app.use(helmet.hsts({
     includeSubDomains: true,
     force: true
 }));
-app.use(cookieParser(secrets.sessionSecret));
-app.use(session({
-    secret: secrets.sessionSecret,
-    cookie: {
-        secure: true,
-        sameSite: false,
-        httpOnly: true,
-    },
-    resave: false,
-    saveUninitialized: true,
-    name: 'session'
-}));
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
-app.use('/', auth);
+app.use(function (req, res, next) {
+    let incoming = req.connection.getPeerCertificate().subject.CN;
+    logging.append_to_log("Incoming request...");
+    logging.append_to_log("   CN: " + incoming);
+    logging.append_to_log("   DEST: " + req.originalUrl);
+
+    // req.isAdmin = constants.admins.includes(incoming);
+    // req.isOwner = constants.owner.includes(incoming);
+    // req.commonName = incoming;
+    next();
+})
+
 app.use('/favicon.ico', express.static('./public/favicon.ico'));
-app.use(secured()); // everything after this is secured
-app.use(userInViews());
 app.use('/lights', lights);
 app.use('/streams', streams);
 app.use('/motion', motion);
@@ -92,12 +76,6 @@ app.use('/', home);
 app.use(errors.queryErrors());
 app.use(errors.pageNotFound());
 app.use(errors.errorHandler());
-
-io.on('connection', function (socket) {
-    socket.on('page_load', function (data) {
-        // logging.append_to_log(req.user.displayName + " loaded page " +data);
-    });
-});
 
 server.listen(config.PORT);
 server.on('listening', function() {

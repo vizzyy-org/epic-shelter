@@ -20,7 +20,7 @@ envOptions = {
     dev: {
         sslPath: "/etc/pki/vizzyy/",
         sslOptions: {
-            ca: null,
+            ca: "server-ca.pem",
             key: 'server-key.pem',
             cert: 'server-cert.pem',
             requestCert: false,
@@ -33,7 +33,20 @@ envOptions = {
     prod: {
         sslPath: "/etc/pki/vizzyy/",
         sslOptions: {
-            ca: null,
+            ca: "server-ca.pem",
+            key: 'server-key.pem',
+            cert: 'server-cert.pem',
+            requestCert: true,
+            rejectUnauthorized: true
+        },
+        rest_ssl_key: 'rest_private_key.pem',
+        rest_ssl_cert: 'rest_public_cert.pem',
+        stream_limit_minutes: 1
+    },
+    test: {
+        sslPath: "/etc/pki/vizzyy/",
+        sslOptions: {
+            ca: "server-ca.pem",
             key: 'server-key.pem',
             cert: 'server-cert.pem',
             requestCert: false,
@@ -41,9 +54,6 @@ envOptions = {
         },
         rest_ssl_key: 'rest_private_key.pem',
         rest_ssl_cert: 'rest_public_cert.pem',
-        stream_limit_minutes: 1
-    },
-    test: {
         stream_limit_minutes: 0
     }
 };
