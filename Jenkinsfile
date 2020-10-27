@@ -31,7 +31,7 @@ pipeline {
     parameters {
         booleanParam(name: 'Build', defaultValue: true, description: 'Build latest artifact')
         booleanParam(name: 'Deploy', defaultValue: true, description: 'Deploy latest artifact')
-        booleanParam(name: 'Test', defaultValue: true, description: 'Run test suite')
+        booleanParam(name: 'Test', defaultValue: false, description: 'Run test suite')
     }
     stages {
         stage("Acknowledge") {
@@ -129,16 +129,17 @@ pipeline {
                     if (env.Deploy == "true") {
 
                         Boolean deployed = false
-                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host'),
+                                         string(credentialsId: 'KEYSTORE_PASS', variable: 'pw')]) {
                             for (int i = 0; i < 12; i++) {
 
                                 try {
                                     def health = sh(
-                                            script: "curl -k https://www.$host/",
+                                            script: "curl -k --cert-type P12 --cert client_keypair.p12:$pw https://www.$host/",
                                             returnStdout: true
                                     ).trim()
                                     echo health
-                                    if (health == "Found. Redirecting to /login") {
+                                    if (health.contains("<title>Home</title>")) {
                                         deployed = true
                                         break
                                     }
