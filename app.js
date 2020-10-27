@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const config = require('./config/environments');
 const logging = require('./helpers/logging_helper');
+const x509 = require('./helpers/x509_helper');
 const home = require('./routes/home')
 const logs = require('./routes/logs')
 const door = require('./routes/door')
@@ -53,18 +54,6 @@ app.use(helmet.hsts({
     force: true
 }));
 
-app.use(function (req, res, next) {
-    let incoming = req.connection.getPeerCertificate().subject.CN;
-    logging.append_to_log("Incoming request...");
-    logging.append_to_log("   CN: " + incoming);
-    logging.append_to_log("   DEST: " + req.originalUrl);
-
-    // req.isAdmin = constants.admins.includes(incoming);
-    // req.isOwner = constants.owner.includes(incoming);
-    // req.commonName = incoming;
-    next();
-})
-
 app.use('/favicon.ico', express.static('./public/favicon.ico'));
 app.use('/lights', lights);
 app.use('/streams', streams);
@@ -73,6 +62,7 @@ app.use('/users', users);
 app.use('/door', door);
 app.use('/logs', logs);
 app.use('/', home);
+app.use(x509());
 app.use(errors.queryErrors());
 app.use(errors.pageNotFound());
 app.use(errors.errorHandler());
