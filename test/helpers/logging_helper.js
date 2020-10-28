@@ -39,7 +39,7 @@ describe('Logging Helper', () => {
                 .query("status=false")
                 .end((err, res) => {
                     if(err) { console.log(err); }
-                    console.log(res.text);
+                    // console.log(res.text);
                     res.should.have.status(200);
                     done();
                 });

@@ -43,7 +43,7 @@ describe('Door', () => {
                     if(err) { console.log(err); }
                     res.should.have.status(200);
                     res.req.path.should.eq("/door/open")
-                    console.log(res.text);
+                    // console.log(res.text);
                     done();
                 });
         });
@@ -57,7 +57,7 @@ describe('Door', () => {
                     if(err) { console.log(err); }
                     res.should.have.status(300);
                     res.req.path.should.eq("/door/close")
-                    console.log(res.text);
+                    // console.log(res.text);
                     done();
                 });
         });
@@ -70,7 +70,7 @@ describe('Door', () => {
                 .end((err, res) => {
                     if(err) { console.log(err); }
                     res.should.have.status(200);
-                    console.log(res.text);
+                    // console.log(res.text);
                     res.text.should.eq("Closed");
                     done();
                 });

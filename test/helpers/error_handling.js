@@ -32,7 +32,7 @@ describe('Error Handling', () => {
                 .get('/randomPage')
                 .end((err, res) => {
                     if(err) { console.log(err); }
-                    console.log(res.text);
+                    // console.log(res.text);
                     res.should.have.status(404);
                     res.text.should.include("<title>Error</title>");
                     done();
@@ -47,7 +47,7 @@ describe('Error Handling', () => {
                 .query('error_description=ThisIsTheDescriptionForThatBadThing')
                 .end((err, res) => {
                     if(err) { console.log(err); }
-                    console.log(res.text);
+                    // console.log(res.text);
                     res.should.have.status(404);
                     res.text.should.include("<title>Error</title>");
                     res.text.should.include("ErrorForDoingSomethingBad");

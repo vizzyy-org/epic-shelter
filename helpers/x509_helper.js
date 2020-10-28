@@ -3,7 +3,6 @@ const secrets = require('/etc/pki/vizzyy/secrets');
 
 module.exports = function () {
     return function (req, res, next) {
-        console.log('test!!!!!')
         if(secrets.environment === "prod") {
             console.log(secrets.environment)
             let incoming = req.connection.getPeerCertificate().subject.CN;
