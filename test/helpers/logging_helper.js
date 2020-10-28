@@ -12,6 +12,7 @@ chai.use(chaiHttp);
 describe('Logging Helper', () => {
 
     before(function () {
+        env.secrets.environment = "dev";
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
         mockMysql.expects('createConnection').atLeast(1).returns({
             query: (query, entry, callback) => {
@@ -31,7 +32,7 @@ describe('Logging Helper', () => {
 
     describe('append_to_log', () => {
         it('should append to log by toggling light', (done) => {
-            env.secrets.environment = "test"; // need to enable test to log to db
+            // env.secrets.environment = "test"; // need to enable test to log to db
             sandbox.stub(rp, 'Request').resolves({});
             chai.request(server)
                 .get('/lights/bedroom/xmas')

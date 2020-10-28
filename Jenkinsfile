@@ -31,7 +31,7 @@ pipeline {
     parameters {
         booleanParam(name: 'Build', defaultValue: true, description: 'Build latest artifact')
         booleanParam(name: 'Deploy', defaultValue: true, description: 'Deploy latest artifact')
-        booleanParam(name: 'Test', defaultValue: false, description: 'Run test suite')
+        booleanParam(name: 'Test', defaultValue: true, description: 'Run test suite')
     }
     stages {
         stage("Acknowledge") {

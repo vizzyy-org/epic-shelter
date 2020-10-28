@@ -13,6 +13,7 @@ chai.use(chaiHttp);
 describe('Streams', () => {
 
     before(function () {
+        env.secrets.environment = "test";
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
         mockMysql.expects('createConnection').atLeast(1).returns({
             query: (query, entry, callback) => {
@@ -31,7 +32,6 @@ describe('Streams', () => {
 
     describe('GET /streams', () => {
         it('should hit streams endpoint', (done) => {
-            env.secrets.environment = "test";
             sandbox.stub(rp, 'Request').resolves({});
             chai.request(server)
                 .get('/streams')
@@ -60,7 +60,6 @@ describe('Streams', () => {
         }
 
         it('should hit streams endpoint', (done) => {
-            env.secrets.environment = "test";
             sandbox.stub(request, "Request").returns(new MockRequest());
             chai.request(server)
                 .get('/streams/door')

@@ -22,8 +22,8 @@ module.exports = {
         res.render('error', {
             locals: {
                 message: {
-                    // error: req.flash('error'),
-                    // error_description: req.flash('error_description')
+                    error: req.query && req.query.error ? req.query.error : "Generic Error",
+                    error_description: req.query && req.query.error_description ? req.query.error_description : "Generic Error Description"
                 }
             },
             message: err.message,

@@ -11,7 +11,7 @@ describe('Error Handling', () => {
 
     before(function () {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-        env.secrets.environment = "test";
+        env.secrets.environment = "dev";
         mockMysql.expects('createConnection').atLeast(1).returns({
             query: (query, entry, callback) => {
                 callback(null, "results", "fields");
@@ -32,6 +32,7 @@ describe('Error Handling', () => {
                 .get('/randomPage')
                 .end((err, res) => {
                     if(err) { console.log(err); }
+                    console.log(res.text);
                     res.should.have.status(404);
                     res.text.should.include("<title>Error</title>");
                     done();
@@ -46,6 +47,7 @@ describe('Error Handling', () => {
                 .query('error_description=ThisIsTheDescriptionForThatBadThing')
                 .end((err, res) => {
                     if(err) { console.log(err); }
+                    console.log(res.text);
                     res.should.have.status(404);
                     res.text.should.include("<title>Error</title>");
                     res.text.should.include("ErrorForDoingSomethingBad");
