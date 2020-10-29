@@ -28,7 +28,8 @@ envOptions = {
         },
         rest_ssl_key: 'rest_private_key.pem',
         rest_ssl_cert: 'rest_public_cert.pem',
-        stream_limit_minutes: 60
+        stream_limit_minutes: 60,
+        throttle_limit: 60
     },
     prod: {
         sslPath: "/etc/pki/vizzyy/",
@@ -41,7 +42,8 @@ envOptions = {
         },
         rest_ssl_key: 'rest_private_key.pem',
         rest_ssl_cert: 'rest_public_cert.pem',
-        stream_limit_minutes: 1
+        stream_limit_minutes: 1,
+        throttle_limit: 30
     },
     test: {
         sslPath: "/etc/pki/vizzyy/",
@@ -54,7 +56,8 @@ envOptions = {
         },
         rest_ssl_key: 'rest_private_key.pem',
         rest_ssl_cert: 'rest_public_cert.pem',
-        stream_limit_minutes: 0
+        stream_limit_minutes: 0,
+        throttle_limit: 1000
     }
 };
 

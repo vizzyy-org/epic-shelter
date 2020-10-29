@@ -46,7 +46,7 @@ const server = require('https').Server({
 const RateLimit = require('express-rate-limit');
 const limiter = new RateLimit({
     windowMs: 60*1000, // 1 minute
-    max: 10
+    max: env.throttle_limit
 });
 
 app.set('views', path.join(__dirname, 'views'));
