@@ -43,6 +43,11 @@ const server = require('https').Server({
     honorCipherOrder: true,
     secureOptions: constants.SSL_OP_NO_TLSv1 | constants.SSL_OP_NO_TLSv1_1
 }, app);
+const RateLimit = require('express-rate-limit');
+const limiter = new RateLimit({
+    windowMs: 60*1000, // 1 minute
+    max: 10
+});
 
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
@@ -53,7 +58,7 @@ app.use(helmet.hsts({
     includeSubDomains: true,
     force: true
 }));
-
+app.use(limiter);
 app.use(x509());
 app.use('/favicon.ico', express.static('./public/favicon.ico'));
 app.use('/lights', lights);
