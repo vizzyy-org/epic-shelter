@@ -13,11 +13,14 @@ body {
 }
 
 .nav-bs {
-  /*background-color: #323232;*/
+  background-color: #ffffff;
   font-size: 4vw;
   /*color: #5cdb95;*/
   width: 30vw;
   height: 10vh;
+  -webkit-appearance: none;
+  border-radius: 0;
+  -webkit-border-radius:0px;
 }
 
 h1 {
@@ -39,10 +42,13 @@ h1 {
   display: inline-block;
   /*padding: 1vh 2vw;*/
   height: 10vh;
-  width: 15vw;
+  width: 20vw;
   background-color: #f1f1f1;
   color: black;
   border-radius: 30%;
+  -webkit-appearance: none;
+  /*border-radius: 0;*/
+  -webkit-border-radius:0px;
 }
 
 .seek:hover {

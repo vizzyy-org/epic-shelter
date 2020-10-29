@@ -8,21 +8,28 @@
     <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
     <div id="myBody" class="outer-box">
         <div class="inner-box">
-            <div class="flex-container-column">
-                <h2>Logs.</h2>
-                <table>
-                    <% for (item in log_entries) { %>
-                    <tr>
-                        <div style="font-size: 1.5vh"><%- log_entries[item].date.toLocaleString() %> - <%- log_entries[item].message %></div>
-                    </tr>
-                    <% } %>
-                </table>
-                <div><br><br></div>
-                <span>
+            <div class="flex-container-row">
+                <h2>Logs</h2>
+            </div>
+            <table>
+                <br><br>
+                <% for (item in log_entries) { %>
+                <tr>
+                    <div class="flex-container-row" style="font-size: 1.5vh"><%- log_entries[item].date.toLocaleString() %> - <%- log_entries[item].message %></div>
+                </tr>
+                <% } %>
+                <br><br><br>
+            </table>
+            <div class="flex-container-row">
+                <div class="flex-container-column">
                     <a href="/logs?page_num=<%- page_num-1 %>" class="seek"><h2>&#8249;</h2></a>
+                </div>
+                <div class="flex-container-column">
                     Page: <%- page_num %>
+                </div>
+                <div class="flex-container-column">
                     <a href="/logs?page_num=<%- eval(page_num) + eval(1) %>" class="seek"><h2>&#8250;</h2></a>
-                </span>
+                </div>
             </div>
         </div>
     </div>
