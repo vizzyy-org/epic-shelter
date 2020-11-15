@@ -1,4 +1,5 @@
 const smysql = require('sync-mysql');
+const mysql = require('mysql');
 const fs = require("fs");
 const log_page_size = 15;
 const secrets = require('/etc/pki/vizzyy/secrets');
@@ -14,6 +15,7 @@ const db_config = {
     }
 };
 
+const connection = mysql.createConnection(db_config);
 const sconnection = new smysql(db_config);
 
 envOptions = {
@@ -66,6 +68,7 @@ module.exports = {
     envOptions: envOptions,
     log_page_size: log_page_size,
     sdb: sconnection,
+    db: connection,
     db_config: db_config,
     secrets: secrets
 };

@@ -9,9 +9,9 @@
     <div id="myBody" class="flex-container-column">
         <h2>Motion</h2>
         <div class="flex-container-row">
-
+            <div id=image><div class="loader"></div></div>
         </div>
-        <div id=image><img style="max-width:100%;max-height:100%;" src="data:image/gif;base64,<%- image %>" alt="Motion IMG"/></div>
+
         <div><br></div>
         <div class="flex-container-row">
             <input class="nav-bs" type="submit" value="Previous" onclick="backward()">
@@ -24,6 +24,7 @@
 
     function forward() {
         let path = "/motion/next";
+        document.getElementById("image").innerHTML = "<div class=\"loader\"></div>";
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("image").innerHTML = "<img style=\"max-width:100%;max-height:100%;\" src=\"data:image/gif;base64,"+this.responseText+"\">";
@@ -35,6 +36,7 @@
 
     function backward() {
         let path = "/motion/prev";
+        document.getElementById("image").innerHTML = "<div class=\"loader\"></div>";
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("image").innerHTML = "<img style=\"max-width:100%;max-height:100%;\" src=\"data:image/gif;base64,"+this.responseText+"\">";
@@ -43,6 +45,18 @@
         xhttp.open("GET", path, true);
         xhttp.send();
     }
+
+    function initial() {
+        let path = "/motion/initial";
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("image").innerHTML = "<img style=\"max-width:100%;max-height:100%;\" src=\"data:image/gif;base64,"+this.responseText+"\">";
+            }
+        };
+        xhttp.open("GET", path, true);
+        xhttp.send();
+    }
+    initial();
 </script>
 </body>
 </html>
