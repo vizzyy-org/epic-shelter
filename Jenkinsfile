@@ -108,15 +108,14 @@ pipeline {
                 script {
                     if (env.Deploy == "true") {
                         deploymentCheckpoint = true;
-                        // docker rmi -f \$(docker images -a -q);
                         def cmd = """
                             docker stop $serviceName;
                             docker rm $serviceName;
-                            docker images -a | grep "$serviceName" | awk '{print \$3}' | xargs docker rmi;
+                            docker images -a | grep '$serviceName' | awk '{print \\\$3}' | xargs docker rmi;
                             $startContainerCommand$commitHash
                         """
                         withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+                            sh("""ssh -i ~/ec2pair.pem ec2-user@$host "$cmd" """)
                         }
 
                     }
@@ -200,7 +199,7 @@ pipeline {
                     def cmd = """
                             docker stop $serviceName;
                             docker rm $serviceName;
-                            docker images -a | grep "$serviceName" | awk '{print \$3}' | xargs docker rmi;
+                            docker images -a | grep '$serviceName' | awk '{print \\\$3}' | xargs docker rmi;
                             $startContainerCommand$commitHash
                         """
                     withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
