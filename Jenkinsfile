@@ -108,10 +108,10 @@ pipeline {
                 script {
                     if (env.Deploy == "true") {
                         deploymentCheckpoint = true;
+                        // docker rmi -f \$(docker images -a -q);
                         def cmd = """
                             docker stop $serviceName;
                             docker rm $serviceName;
-                            docker rmi -f \$(docker images -a -q);
                             $startContainerCommand$commitHash
                         """
                         withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
