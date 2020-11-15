@@ -112,6 +112,7 @@ pipeline {
                         def cmd = """
                             docker stop $serviceName;
                             docker rm $serviceName;
+                            docker images -a | grep "$serviceName" | awk '{print \$3}' | xargs docker rmi;
                             $startContainerCommand$commitHash
                         """
                         withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
@@ -199,7 +200,7 @@ pipeline {
                     def cmd = """
                             docker stop $serviceName;
                             docker rm $serviceName;
-                            docker rmi -f \$(docker images -a -q);
+                            docker images -a | grep "$serviceName" | awk '{print \$3}' | xargs docker rmi;
                             $startContainerCommand$commitHash
                         """
                     withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
