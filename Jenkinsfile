@@ -135,7 +135,7 @@ pipeline {
                         $startContainerCommand$commitHash
                     """
                     withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                        sh("""ssh -i ~/ec2pair.pem ec2-user@$host "$cmd" """)
+                        sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
                     }
                 }
             }
@@ -174,7 +174,7 @@ pipeline {
                             $startContainerCommand$commitHash
                         """
                         withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                            sh("""ssh -i ~/ec2pair.pem ec2-user@$host "$cmd" """)
+                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
                         }
                     }
 
