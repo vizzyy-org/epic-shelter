@@ -150,6 +150,7 @@ pipeline {
             steps {
                 script {
                     confirmDeployed()
+                    rollback = true // test rollback
                 }
             }
         }
