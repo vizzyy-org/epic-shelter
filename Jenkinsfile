@@ -35,53 +35,67 @@ pipeline {
     }
     stages {
         stage("Acknowledge") {
+            when {
+                expression {
+                    return env.Build == "true" && ISSUE_NUMBER
+                }
+            }
             steps {
                 script {
-                    if (env.Build == "true" && ISSUE_NUMBER) {
-                        prTools.comment(ISSUE_NUMBER,
-                                """{
-                                    "body": "Jenkins triggered $currentBuild.displayName"
-                                }""",
-                                serviceName)
-                    }
+                    prTools.comment(ISSUE_NUMBER,
+                            """{
+                                "body": "Jenkins triggered $currentBuild.displayName"
+                            }""",
+                            serviceName)
+                }
+            }
+        }
+
+        stage("Checkout") {
+            steps {
+                script {
+                    prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/$serviceName")
+                    commitHash = env.GIT_COMMIT.substring(0,7)
                 }
             }
         }
 
         stage("Build") {
+            when {
+                expression {
+                    return env.Build == "true"
+                }
+            }
             steps {
                 script {
                     nodejs(nodeJSInstallationName: 'Node 14.X') {
-                        prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/$serviceName")
-
-                        if (env.Build == "true") {
-                            commitHash = env.GIT_COMMIT.substring(0,7)
-                            sh("""
-                                npm i --silent
-                                docker build --squash -t vizzyy/$serviceName:${commitHash} . --network=host;
-                            """)
-                        }
+                        sh("""
+                            npm i --silent
+                            docker build --squash -t vizzyy/$serviceName:${commitHash} . --network=host;
+                        """)
                     }
                 }
             }
         }
 
         stage("Test") {
+            when {
+                expression {
+                    return env.Test == "true"
+                }
+            }
             steps {
                 script {
                     nodejs(nodeJSInstallationName: 'Node 14.X') {
-                        if (env.Test == "true") {
+                        echo 'Running Mocha Tests...'
+                        rc = sh(script: "npm run coverage", returnStatus: true)
 
-                            echo 'Running Mocha Tests...'
-                            rc = sh(script: "npm run coverage", returnStatus: true)
-
-                            if (rc != 0) {
-                                sh """
-                                    docker rm $serviceName;
-                                    docker rmi -f \$(docker images -a -q);
-                                """
-                                error("Mocha tests failed!")
-                            }
+                        if (rc != 0) {
+                            sh """
+                                docker rm $serviceName;
+                                docker rmi -f \$(docker images -a -q);
+                            """
+                            error("Mocha tests failed!")
                         }
                     }
                 }
@@ -89,73 +103,78 @@ pipeline {
         }
 
         stage("Deploy") {
+            when {
+                expression {
+                    return env.Deploy == "true"
+                }
+            }
             steps {
                 script {
-                    if (env.Deploy == "true") {
-
-                        sh("""
-                            docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:${commitHash};
-                            docker push vizzyy/$serviceName:${commitHash};
-                        """)
-
-                    }
+                    sh("""
+                        docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:${commitHash};
+                        docker push vizzyy/$serviceName:${commitHash};
+                    """)
                 }
             }
         }
 
         stage("Start") {
+            when {
+                expression {
+                    return env.Deploy == "true"
+                }
+            }
             steps {
                 script {
-                    if (env.Deploy == "true") {
-                        deploymentCheckpoint = true;
-                        def cmd = """
-                            docker stop $serviceName;
-                            docker rm $serviceName;
-                            docker images -a | grep '$serviceName' | awk '{print \\\$3}' | xargs docker rmi;
-                            $startContainerCommand$commitHash
-                        """
-                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                            sh("""ssh -i ~/ec2pair.pem ec2-user@$host "$cmd" """)
-                        }
-
+                    deploymentCheckpoint = true;
+                    def cmd = """
+                        docker stop $serviceName;
+                        docker rm $serviceName;
+                        docker images -a | grep '$serviceName' | awk '{print \\\$3}' | xargs docker rmi;
+                        $startContainerCommand$commitHash
+                    """
+                    withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                        sh("""ssh -i ~/ec2pair.pem ec2-user@$host "$cmd" """)
                     }
                 }
             }
         }
 
         stage("Confirm") {
+            when {
+                expression {
+                    return env.Deploy == "true"
+                }
+            }
             steps {
                 script {
-                    if (env.Deploy == "true") {
+                    Boolean deployed = false
+                    withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host'),
+                                     string(credentialsId: 'KEYSTORE_PASS', variable: 'pw')]) {
+                        for (int i = 0; i < 12; i++) {
 
-                        Boolean deployed = false
-                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host'),
-                                         string(credentialsId: 'KEYSTORE_PASS', variable: 'pw')]) {
-                            for (int i = 0; i < 12; i++) {
-
-                                try {
-                                    def health = sh(
-                                            script: "curl -k --cert-type P12 --cert ~/client_keypair.p12:$pw https://www.$host/",
-                                            returnStdout: true
-                                    ).trim()
-                                    echo health
-                                    if (health.contains("<title>Home</title>")) {
-                                        deployed = true
-                                        break
-                                    }
-                                } catch (Exception e) {
-                                    echo "Could not parse health check response."
-                                    e.printStackTrace()
+                            try {
+                                def health = sh(
+                                        script: "curl -k --cert-type P12 --cert ~/client_keypair.p12:$pw https://www.$host/",
+                                        returnStdout: true
+                                ).trim()
+                                echo health
+                                if (health.contains("<title>Home</title>")) {
+                                    deployed = true
+                                    break
                                 }
-
-                                sleep time: i, unit: 'SECONDS'
-
+                            } catch (Exception e) {
+                                echo "Could not parse health check response."
+                                e.printStackTrace()
                             }
 
-                            if (!deployed)
-                                error("Failed to deploy.")
+                            sleep time: i, unit: 'SECONDS'
 
                         }
+
+                        if (!deployed)
+                            error("Failed to deploy.")
+
                     }
                 }
             }
