@@ -5,6 +5,7 @@ currentBuild.displayName = "Epic-Shelter [$currentBuild.number]"
 String serviceName = "epic-shelter"
 String commitHash = ""
 Boolean deploymentCheckpoint = false
+Boolean rollback = false
 GString startContainerCommand = "docker run --log-driver=journald \
 --log-opt tag=$serviceName \
 --restart always \
@@ -130,7 +131,7 @@ pipeline {
                     def cmd = """
                         docker stop $serviceName;
                         docker rm $serviceName;
-                        docker images -a | grep '$serviceName' | awk '{print \\\$3}' | xargs docker rmi;
+                        docker rmi -f \$(docker images -a -q);
                         $startContainerCommand$commitHash
                     """
                     withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
@@ -148,34 +149,7 @@ pipeline {
             }
             steps {
                 script {
-                    Boolean deployed = false
-                    withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host'),
-                                     string(credentialsId: 'KEYSTORE_PASS', variable: 'pw')]) {
-                        for (int i = 0; i < 12; i++) {
-
-                            try {
-                                def health = sh(
-                                        script: "curl -k --cert-type P12 --cert ~/client_keypair.p12:$pw https://www.$host/",
-                                        returnStdout: true
-                                ).trim()
-                                echo health
-                                if (health.contains("<title>Home</title>")) {
-                                    deployed = true
-                                    break
-                                }
-                            } catch (Exception e) {
-                                echo "Could not parse health check response."
-                                e.printStackTrace()
-                            }
-
-                            sleep time: i, unit: 'SECONDS'
-
-                        }
-
-                        if (!deployed)
-                            error("Failed to deploy.")
-
-                    }
+                    confirmDeployed()
                 }
             }
         }
@@ -218,7 +192,7 @@ pipeline {
                     def cmd = """
                             docker stop $serviceName;
                             docker rm $serviceName;
-                            docker images -a | grep '$serviceName' | awk '{print \\\$3}' | xargs docker rmi;
+                            docker rmi -f \$(docker images -a -q);
                             $startContainerCommand$commitHash
                         """
                     withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
@@ -230,5 +204,36 @@ pipeline {
         cleanup { // Cleanup post-flow always executes last
             deleteDir()
         }
+    }
+}
+
+boolean confirmDeployed(){
+    Boolean deployed = false
+    withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host'),
+                     string(credentialsId: 'KEYSTORE_PASS', variable: 'pw')]) {
+        for (int i = 0; i < 12; i++) {
+
+            try {
+                def health = sh(
+                        script: "curl -k --cert-type P12 --cert ~/client_keypair.p12:$pw https://www.$host/",
+                        returnStdout: true
+                ).trim()
+                echo health
+                if (health.contains("<title>Home</title>")) {
+                    deployed = true
+                    break
+                }
+            } catch (Exception e) {
+                echo "Could not parse health check response."
+                e.printStackTrace()
+            }
+
+            sleep time: i, unit: 'SECONDS'
+
+        }
+
+        if (!deployed)
+            error("Failed to deploy.")
+
     }
 }
