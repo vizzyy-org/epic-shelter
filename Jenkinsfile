@@ -176,8 +176,8 @@ pipeline {
                             sh("""ssh -i ~/ec2pair.pem ec2-user@$host "$cmd" """)
                         }
                     }
-                    confirmDeployed()
-                    if(deployed = true){
+
+                    if(confirmDeployed()){
                         echo "ROLLBACK SUCCESS"
                     } else {
                         echo "ROLLBACK FAILURE"
@@ -257,5 +257,7 @@ boolean confirmDeployed(){
             rollback = true
 //            error("Failed to deploy.")
         }
+
+        return deployed
     }
 }
