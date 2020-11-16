@@ -153,6 +153,39 @@ pipeline {
                 }
             }
         }
+
+        stage("Rollback") {
+            when {
+                expression {
+                    return rollback
+                }
+            }
+            steps {
+                script {
+                    if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
+                        commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
+                        commitHash = commitHash.substring(0, 7)
+                        echo "Rolling back to previous successful image. Hash: $commitHash"
+                        def cmd = """
+                            docker stop $serviceName;
+                            docker rm $serviceName;
+                            docker rmi -f \$(docker images -a -q);
+                            $startContainerCommand$commitHash
+                        """
+                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                            sh("""ssh -i ~/ec2pair.pem ec2-user@$host "$cmd" """)
+                        }
+                    }
+                    confirmDeployed()
+                    if(deployed = true){
+                        echo "ROLLBACK SUCCESS"
+                    } else {
+                        echo "ROLLBACK FAILURE"
+                    }
+                }
+            }
+        }
+
     }
     post {
         always {
@@ -174,6 +207,7 @@ pipeline {
                             serviceName)
                 }
                 sh "echo '${env.GIT_COMMIT}' > ~/userContent/$serviceName-last-success-hash.txt"
+                echo "SUCCESS"
             }
         }
         failure {
@@ -185,20 +219,7 @@ pipeline {
                             }""",
                             serviceName)
                 }
-                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
-                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
-                    commitHash = commitHash.substring(0, 7)
-                    echo "Rolling back to previous successful image. Hash: $commitHash"
-                    def cmd = """
-                            docker stop $serviceName;
-                            docker rm $serviceName;
-                            docker rmi -f \$(docker images -a -q);
-                            $startContainerCommand$commitHash
-                        """
-                    withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                        sh("""ssh -i ~/ec2pair.pem ec2-user@$host "$cmd" """)
-                    }
-                }
+                echo "FAILURE"
             }
         }
         cleanup { // Cleanup post-flow always executes last
@@ -232,8 +253,9 @@ boolean confirmDeployed(){
 
         }
 
-        if (!deployed)
-            error("Failed to deploy.")
-
+        if (!deployed) {
+            rollback = true
+//            error("Failed to deploy.")
+        }
     }
 }
