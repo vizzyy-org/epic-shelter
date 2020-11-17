@@ -6,6 +6,7 @@ const path = require('path');
 const config = require('./config/environments');
 const logging = require('./helpers/logging_helper');
 const x509 = require('./helpers/x509_helper');
+const cacheHelper = require('./helpers/cache_helper');
 const home = require('./routes/home')
 const logs = require('./routes/logs')
 const door = require('./routes/door')
@@ -60,6 +61,7 @@ app.use(helmet.hsts({
 }));
 app.use(limiter);
 app.use(x509());
+app.use(cacheHelper(60));
 app.use('/favicon.ico', express.static('./public/favicon.ico'));
 app.use('/lights', lights);
 app.use('/streams', streams);
