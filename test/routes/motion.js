@@ -29,30 +29,18 @@ describe('Motion', () => {
         });
     });
 
-    describe('GET /motion/next', () => {
-        it('should render motion page after seeking forward', (done) => {
+    describe('GET /motion/data/1', () => {
+        it('should return asset', (done) => {
             chai.request(server)
-                .get('/motion/next')
+                .get('/motion/data/1')
                 .end((err, res) => {
                     if(err) { console.log(err); }
-                    res.req.path.should.eq("/motion/next")
+                    res.req.path.should.eq("/motion/data/1")
                     res.should.have.status(200);
                     done();
                 });
         });
     });
 
-    describe('GET /motion/prev', () => {
-        it('should render motion page after seeking backwards', (done) => {
-            chai.request(server)
-                .get('/motion/prev')
-                .end((err, res) => {
-                    if(err) { console.log(err); }
-                    res.req.path.should.eq("/motion/prev")
-                    res.should.have.status(200);
-                    done();
-                });
-        });
-    });
 
 });
