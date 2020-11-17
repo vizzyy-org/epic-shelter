@@ -35,9 +35,9 @@ function renderInitialMotionAsset(res = null){
 }
 
 function sendMotionAssetById(res, id){
-    let query = `select * from images where ID = ${id};`;
+    let query = `select * from images where ID = ?`;
 
-    env.db.query(query, function (error, results, fields) {
+    env.db.query(query, [id], function (error, results, fields) {
         if (error) throw error;
 
         const record = results[0]; // select first row
