@@ -61,7 +61,7 @@ app.use(helmet.hsts({
 }));
 app.use(limiter);
 app.use(x509());
-app.use(cacheHelper(60));
+app.use(cacheHelper(env.cache_ttl_seconds));
 app.use('/favicon.ico', express.static('./public/favicon.ico'));
 app.use('/lights', lights);
 app.use('/streams', streams);
