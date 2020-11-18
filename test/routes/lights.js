@@ -62,12 +62,13 @@ describe('Lights', () => {
         it('it should toggle /lights/bedroom/xmas OFF', (done) => {
             sandbox.stub(rp, 'Request').resolves({});
             chai.request(server)
-                .get('/lights/bedroom/xmas')
-                .query("status=false")
+                .post('/lights/bedroom/xmas')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({status: 'false'})
                 .end((err, res) => {
                     if(err) { console.log(err); }
                     console.log(res.text);
-                    res.req.path.should.eq("/lights/bedroom/xmas?status=false")
+                    res.req.path.should.eq("/lights/bedroom/xmas")
                     res.should.have.status(200);
                     done();
                 });
@@ -77,11 +78,12 @@ describe('Lights', () => {
         it('it should toggle /lights/bedroom/xmas ON', (done) => {
             sandbox.stub(rp, 'Request').resolves({});
             chai.request(server)
-                .get('/lights/bedroom/xmas')
-                .query("status=true")
+                .post('/lights/bedroom/xmas')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({status: 'true'})
                 .end((err, res) => {
                     if(err) { console.log(err); }
-                    res.req.path.should.eq("/lights/bedroom/xmas?status=true")
+                    res.req.path.should.eq("/lights/bedroom/xmas")
                     res.should.have.status(200);
                     done();
                 });
@@ -91,11 +93,12 @@ describe('Lights', () => {
         it('it should invoke /strip/inside', (done) => {
             sandbox.stub(rp, 'Request').resolves({});
             chai.request(server)
-                .get('/lights/strip/inside')
-                .query("status=clear")
+                .post('/lights/strip/inside')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({status: 'clear'})
                 .end((err, res) => {
                     if(err) { console.log(err); }
-                    res.req.path.should.eq("/lights/strip/inside?status=clear")
+                    res.req.path.should.eq("/lights/strip/inside")
                     res.should.have.status(200);
                     done();
                 });
@@ -105,11 +108,12 @@ describe('Lights', () => {
         it('it should invoke /strip/outside', (done) => {
             sandbox.stub(rp, 'Request').resolves({});
             chai.request(server)
-                .get('/lights/strip/outside')
-                .query("status=clear")
+                .post('/lights/strip/outside')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({status: 'clear'})
                 .end((err, res) => {
                     if(err) { console.log(err); }
-                    res.req.path.should.eq("/lights/strip/outside?status=clear")
+                    res.req.path.should.eq("/lights/strip/outside")
                     res.should.have.status(200);
                     done();
                 });

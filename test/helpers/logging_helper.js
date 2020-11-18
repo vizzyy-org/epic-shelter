@@ -35,8 +35,9 @@ describe('Logging Helper', () => {
             // env.secrets.environment = "test"; // need to enable test to log to db
             sandbox.stub(rp, 'Request').resolves({});
             chai.request(server)
-                .get('/lights/bedroom/xmas')
-                .query("status=false")
+                .post('/lights/bedroom/xmas')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({status: 'false'})
                 .end((err, res) => {
                     if(err) { console.log(err); }
                     // console.log(res.text);
