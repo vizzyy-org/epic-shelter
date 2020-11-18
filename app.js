@@ -2,6 +2,7 @@ const { constants } = require('crypto')
 const express = require('express');
 const helmet = require('helmet');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 const path = require('path');
 const config = require('./config/environments');
 const logging = require('./helpers/logging_helper');
@@ -50,9 +51,12 @@ const limiter = new RateLimit({
     max: env.throttle_limit
 });
 
+
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet.hsts({
     maxAge: 31536000000, //one year
