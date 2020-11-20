@@ -15,7 +15,10 @@
                 <br><br>
                 <% for (item in log_entries) { %>
                 <tr>
-                    <div class="flex-container-row" style="font-size: 1.3vh"><%- log_entries[item].date.toLocaleString() %> - <%- log_entries[item].message %></div>
+                    <div class="flex-container-row" style="font-size: 1.3vh">
+                        <div class="flex-container-column"><%- log_entries[item].date.toLocaleString() %></div>
+                        <div class="flex-container-column"><%- log_entries[item].message %></div>
+                    </div>
                 </tr>
                 <% } %>
                 <br><br><br>
