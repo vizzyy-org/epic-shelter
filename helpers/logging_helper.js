@@ -7,9 +7,8 @@ module.exports = {
 
         if (["prod", "test"].includes(env.secrets.environment)) {
             try {
-                let db_conn = mysql.createConnection(env.db_config);
                 let entry = {date: new Date(), message: final_entry, service: "epic-shelter"};
-                db_conn.query('INSERT INTO logs SET ?', entry, function (error, results, fields) {
+                env.db.query('INSERT INTO logs SET ?', entry, function (error, results, fields) {
                     if (error) {
                         console.log(error);
                         return error
