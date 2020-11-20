@@ -11,7 +11,7 @@ module.exports = function (duration) {
             return
         }
 
-        let key = '__express__' + req.originalUrl || req.url;
+        let key = req.originalUrl || req.url;
         if (isDev) console.log("checking cache for: " + key);
         let cacheContent = memCache.get(key);
         if (cacheContent) {

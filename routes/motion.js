@@ -6,12 +6,10 @@ const router = express.Router();
 let recordCount = -1;
 
 router.get('/', function(req, res) {
-    logging.append_to_log("opened motion page.", req.user ? req.user.displayName : "DEV USER");
     renderInitialMotionAsset(res);
 });
 
 router.get('/data/:imageId', function(req, res) {
-    logging.append_to_log("viewed motion #"+req.params.imageId+".", req.user ? req.user.displayName : "DEV USER");
     sendMotionAssetById(res, req.params.imageId);
 });
 

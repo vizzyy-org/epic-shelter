@@ -17,15 +17,11 @@ const ssl_base_config = {
 module.exports = {
     ssl_base_config: ssl_base_config,
     mutual_auth_call: function (URL, method, payload, req, res) {
-        // logging.append_to_log("REST call endpoint: "+req.url);
 
         let requestOptions = Object.assign({}, ssl_base_config);
         requestOptions.uri = URL;
         requestOptions.method = method;
         rp(requestOptions).then(function(body) {
-            let user = req.user ? req.user.displayName : "DEV-USER";
-            logging.append_to_log( "successfully called: " + URL, user);
-            // console.log(body);
             res.send(body);
         }).catch(err => {
             logging.append_to_log(err);

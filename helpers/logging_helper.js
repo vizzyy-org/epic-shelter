@@ -1,5 +1,4 @@
 const env = require('../config/environments');
-const mysql = require("mysql");
 
 module.exports = {
     append_to_log: function (entry_text, user = "DEV-LOG"){
@@ -26,7 +25,7 @@ module.exports = {
     },
     query_logs: function (req, res, page_size, page_num){
         try {
-            let db_conn = mysql.createConnection(env.db_config);
+            let db_conn = env.db.connection
             let offset = (page_num - 1) * page_size;
             db_conn.query('SELECT *  FROM logs ORDER by ID DESC LIMIT '+page_size+' OFFSET ' + offset, function (error, results, fields) {
                 if (error) {
