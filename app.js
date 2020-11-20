@@ -82,7 +82,7 @@ server.listen(config.PORT);
 server.on('listening', function() {
     let addr = server.address();
     let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-    logging.append_to_log('Listening on ' + bind);
+    logging.append_to_log('Listening on ' + bind, null);
 });
 
 module.exports = server;

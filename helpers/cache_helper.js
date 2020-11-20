@@ -2,6 +2,7 @@ const cache = require("memory-cache");
 let memCache = new cache.Cache();
 const secrets = require('/etc/pki/vizzyy/secrets');
 let isDev = secrets.environment === "dev"
+let excludedPaths = ['/logs']
 
 module.exports = function (duration) {
     return (req, res, next) => {
@@ -14,7 +15,7 @@ module.exports = function (duration) {
         let key = req.originalUrl || req.url;
         if (isDev) console.log("checking cache for: " + key);
         let cacheContent = memCache.get(key);
-        if (cacheContent) {
+        if (cacheContent && !excludedPaths.includes(key)) {
             if (isDev) console.log("Cache hit!");
             res.send(cacheContent);
         } else {
