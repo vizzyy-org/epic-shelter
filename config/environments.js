@@ -4,6 +4,8 @@ const fs = require("fs");
 const log_page_size = 15;
 const secrets = require('/etc/pki/vizzyy/secrets');
 const PORT = secrets.PORT ? secrets.PORT : 443;
+const cache_excluded_paths = ['/logs', '/streams']
+const logging_excluded_paths = ['/logs']
 const db_config = {
     host: secrets.HUB_HOST,
     port: secrets.database.DB_PORT,
@@ -73,5 +75,7 @@ module.exports = {
     sdb: sconnection,
     db: connection,
     db_config: db_config,
-    secrets: secrets
+    secrets: secrets,
+    cache_excluded_paths: cache_excluded_paths,
+    logging_excluded_paths: logging_excluded_paths
 };
