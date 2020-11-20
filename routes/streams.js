@@ -12,15 +12,15 @@ router.get('/', function (req, res) {
 
 router.get('/door', (req, res) => {
     let reqUrl = 'https://' + secrets.HUB_HOST + '/video';
-    handleStream(res, reqUrl);
+    handleStream(req, res, reqUrl);
 })
 
 router.get('/battery', (req, res) => {
     let reqUrl = 'https://' + secrets.HUB_HOST + '/video2';
-    handleStream(res, reqUrl);
+    handleStream(req, res, reqUrl);
 })
 
-function handleStream(res, reqUrl){
+function handleStream(req, res, reqUrl){
     let requestOptions = Object.assign({}, rest_helper.ssl_base_config);
     requestOptions.uri = reqUrl;
     requestOptions.json = false;
@@ -37,7 +37,6 @@ function handleStream(res, reqUrl){
 
     //Limit resources used -- 60000ms = 1 minute
     let timeout = 60000 * parseInt(env.envOptions[secrets.environment].stream_limit_minutes);
-    console.log(timeout);
     setTimeout(() => { stream.abort() }, timeout);
 }
 

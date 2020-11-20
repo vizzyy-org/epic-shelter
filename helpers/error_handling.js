@@ -1,4 +1,5 @@
 const config = require('../config/environments')
+const logging_helper = require("./logging_helper");
 
 module.exports = {
     queryErrors: function () { return function authFailure(req, res, next) {
@@ -17,8 +18,8 @@ module.exports = {
     }},
     errorHandler: function () { return function errorHandler(err, req, res, next) {
         res.status(err.status || 500);
-        if (config.secrets.environment === 'dev')
-            console.log(err);
+        console.log(err);
+        logging_helper.append_to_log(err, null);
         res.render('error', {
             locals: {
                 message: {
