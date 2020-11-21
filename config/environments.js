@@ -1,4 +1,3 @@
-const smysql = require('sync-mysql');
 const mysql = require('mysql');
 const fs = require("fs");
 const log_page_size = 15;
@@ -18,7 +17,6 @@ const db_config = {
 };
 
 const connection = mysql.createConnection(db_config);
-const sconnection = new smysql(db_config);
 
 envOptions = {
     dev: {
@@ -72,7 +70,6 @@ module.exports = {
     PORT: PORT,
     envOptions: envOptions,
     log_page_size: log_page_size,
-    sdb: sconnection,
     db: connection,
     db_config: db_config,
     secrets: secrets,

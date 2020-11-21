@@ -72,7 +72,9 @@ pipeline {
             steps {
                 script {
                     nodejs(nodeJSInstallationName: "Node $nodeVersion") {
+                        // run npm outdated just to have an audit of what can be upgraded
                         sh("""
+                            npm outdated
                             npm i --silent
                             docker build --build-arg NODE_VERSION=$nodeVersion --squash -t vizzyy/$serviceName:${commitHash} . --network=host;
                         """)
