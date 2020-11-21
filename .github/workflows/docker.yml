@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Read .nvmrc
-        run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
+        run: echo "##[set-output name=NVMRC;]$(cat ../../.nvmrc)"
         id: nvm
       - uses: actions/checkout@v2
       - name: Set up QEMU
