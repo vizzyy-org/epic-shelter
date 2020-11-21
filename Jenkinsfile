@@ -3,6 +3,7 @@
 currentBuild.displayName = "Epic-Shelter [$currentBuild.number]"
 
 String serviceName = "epic-shelter"
+String nodeVersion = ""
 String commitHash = ""
 Boolean deploymentCheckpoint = false
 Boolean rollback = false
@@ -57,6 +58,7 @@ pipeline {
                 script {
                     prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/$serviceName")
                     commitHash = env.GIT_COMMIT.substring(0,7)
+                    nodeVersion = sh(script: "cat .nvmrc", returnStdout: true)
                 }
             }
         }
@@ -69,10 +71,10 @@ pipeline {
             }
             steps {
                 script {
-                    nodejs(nodeJSInstallationName: 'Node 14.X') {
+                    nodejs(nodeJSInstallationName: "Node $nodeVersion") {
                         sh("""
                             npm i --silent
-                            docker build --squash -t vizzyy/$serviceName:${commitHash} . --network=host;
+                            docker build --build-arg NODE_VERSION=$nodeVersion --squash -t vizzyy/$serviceName:${commitHash} . --network=host;
                         """)
                     }
                 }
@@ -87,7 +89,7 @@ pipeline {
             }
             steps {
                 script {
-                    nodejs(nodeJSInstallationName: 'Node 14.X') {
+                    nodejs(nodeJSInstallationName: "Node $nodeVersion") {
                         echo 'Running Mocha Tests...'
                         rc = sh(script: "npm run coverage", returnStatus: true)
 
