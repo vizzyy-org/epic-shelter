@@ -46,7 +46,10 @@ function sendMotionAssetById(res, id){
             res.status(404).send(null);
         } else {
             console.log("BLOB data found.");
-            res.send(Buffer.from(record.Image).toString('base64'));
+            res.send({
+                'buffer': Buffer.from(record.Image).toString('base64'),
+                'timestamp': record.Time.split("-event")[0]
+            });
         }
     });
 }

@@ -16,7 +16,10 @@
         <div><br></div>
         <div class="flex-container-row">
             <input class="nav-bs" type="submit" value="Previous" onclick="backward()">
-            <div id="assetId"><%- recordCount -%></div>
+            <div id="myBody" class="flex-container-column">
+                <div id="assetId" style="font-size: 1.3vh" class="flex-container-row">ID: <%- recordCount -%></div>
+                <div id="assetDate" style="font-size: 1.3vh" class="flex-container-row"></div>
+            </div>
             <input class="nav-bs" type="submit" value="Next" onclick="forward()">
         </div>
     </div>
@@ -26,8 +29,6 @@
     let xhttp = new XMLHttpRequest();
 
     let currentId = <%- recordCount -%>;
-
-    console.log( currentId );
 
     function forward() {
         currentId++;
@@ -44,13 +45,14 @@
         document.getElementById("image").innerHTML = "<div class=\"loader\"></div>";
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("image").innerHTML = "<img style=\"max-width:100%;max-height:100%;\" src=\"data:image/gif;base64,"+this.responseText+"\">";
-                document.getElementById("assetId").innerHTML = id;
-                return true;
+                let resp = JSON.parse(this.response);
+                document.getElementById("image").innerHTML = "<img style=\"max-width:100%;max-height:100%;\" src=\"data:image/gif;base64,"+resp.buffer+"\">";
+                document.getElementById("assetId").innerHTML = "ID: "+id;
+                document.getElementById("assetDate").innerHTML = resp.timestamp;
             } else if (this.readyState == 4 && this.status == 404) {
                 document.getElementById("image").innerHTML = "<img style=\"max-width:90vw;max-height:20vh;\" src=\"/image-not-found.png\">";
                 document.getElementById("assetId").innerHTML = id;
-                return false;
+                document.getElementById("assetDate").innerHTML = "";
             }
         };
         xhttp.open("GET", path, true);
