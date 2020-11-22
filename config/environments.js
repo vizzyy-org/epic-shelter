@@ -3,7 +3,7 @@ const fs = require("fs");
 const log_page_size = 15;
 const secrets = require('/etc/pki/vizzyy/secrets');
 const PORT = secrets.PORT ? secrets.PORT : 443;
-const cache_excluded_paths = ['/logs', '/streams']
+const cache_excluded_paths = /\/logs$|\/streams$|\/motion$/g;
 const logging_excluded_paths = ['/logs?page_num']
 const db_config = {
     host: secrets.HUB_HOST,
