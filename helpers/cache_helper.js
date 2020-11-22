@@ -15,7 +15,7 @@ module.exports = function (duration) {
         let key = req.originalUrl || req.url;
         if (isDev) console.log("checking cache for: " + key);
         let cacheContent = memCache.get(key);
-        if (cacheContent && !env.cache_excluded_paths.some(v => key.includes(v))) {
+        if (cacheContent && !env.cache_excluded_paths.some(v => key.includes(v)) && key !== '/motion') {
             if (isDev) console.log("Cache hit!");
             res.send(cacheContent);
         } else {
