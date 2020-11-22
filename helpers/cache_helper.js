@@ -6,16 +6,18 @@ let isDev = secrets.environment === "dev"
 
 module.exports = function (duration) {
     return (req, res, next) => {
-        if (req.method !== "GET") { // do not cache POST/PUT/DELETE/etc
-            if (isDev) console.log("Skipping cache for request method: " + req.method);
+        let key = req.originalUrl || req.url;
+
+        // do not cache POST/PUT/DELETE/etc, or any excluded path
+        if (req.method !== "GET" || key.match(env.cache_excluded_paths)) {
+            if (isDev) console.log(`Skipping cache for [request: ${key}, method: ${req.method}]`);
             next();
             return
         }
 
-        let key = req.originalUrl || req.url;
         if (isDev) console.log("checking cache for: " + key);
         let cacheContent = memCache.get(key);
-        if (cacheContent && !key.match(env.cache_excluded_paths)) {
+        if (cacheContent) {
             if (isDev) console.log("Cache hit!");
             res.send(cacheContent);
         } else {
