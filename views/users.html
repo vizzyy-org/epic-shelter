@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html>
 <%- include('headers.html'); -%>
-<title>Door</title>
+<title>Users</title>
 <body>
 <div class="mobile-container">
     <%- include('nav.html'); -%>
     <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
     <div id="myBody" class="outer-box">
         <div class="inner-box">
-            <div class="flex-container-column" style="font-size: 12px">
-                <span>
-                    <% if (userProfile) { %>
-                        <img src="<%- userProfile.picture -%>" alt="userImage" style="max-height: 10vh; max-width: 10vw;">
-                        <h2><%- userProfile.displayName -%></h2>
-                    <% } %>
-                </span>
-                <div><br></div>
-                Your IP is: <%- test %>
-                <div><br></div>
-                <%- userProfileParsed %>
+            <div class="flex-container-column" style="width: 100%;">
+                <div class="flex-container-row">
+                    <img style="max-width:90vw;max-height:20vh;" src="/default-user-icon.jpg" alt="user-img">
+                </div>
+
+                <% if (userProfile) { %>
+                <div class="flex-container-row" style="padding: 5vh;"><h2><%- userProfile.displayName -%></h2></div>
+
+                <div class="flex-container-row" style="padding: 1vh">Your IP is: <%- ipaddress %></div>
+
+                <div class="flex-container-row" style="padding: 1vh">Valid From: <%- userProfile.validFrom %></div>
+
+                <div class="flex-container-row" style="padding: 1vh">Valid To: <%- userProfile.validTo %></div>
+                
+                <% } %>
+
             </div>
         </div>
     </div>
