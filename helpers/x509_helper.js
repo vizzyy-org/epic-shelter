@@ -1,5 +1,5 @@
 const secrets = require('/etc/pki/vizzyy/secrets');
-const logging = require("./logging_helper");
+const logging = require("./db_helper");
 const env = require("../config/environments");
 
 module.exports = function () {

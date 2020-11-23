@@ -1,5 +1,5 @@
 const config = require('../config/environments')
-const logging_helper = require("./logging_helper");
+const logging_helper = require("./db_helper");
 
 module.exports = {
     queryErrors: function () { return function authFailure(req, res, next) {

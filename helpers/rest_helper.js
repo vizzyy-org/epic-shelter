@@ -1,6 +1,6 @@
 const fs = require('fs');
 const config = require('../config/environments');
-const logging = require('./logging_helper');
+const logging = require('./db_helper');
 const env = config.envOptions[config.secrets.environment];
 const rp = require('request-promise');
 

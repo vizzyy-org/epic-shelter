@@ -1,5 +1,5 @@
 const express = require('express');
-const logging = require('../helpers/logging_helper');
+const logging = require('../helpers/db_helper');
 const secrets = require('/etc/pki/vizzyy/secrets');
 const rest_helper = require('../helpers/rest_helper')
 const router = express.Router();

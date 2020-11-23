@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const logging = require('../helpers/logging_helper');
+const logging = require('../helpers/db_helper');
 const env = require('../config/environments')
 
 router.get('/', function(req, res) {
