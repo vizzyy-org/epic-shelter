@@ -1,4 +1,5 @@
-const fs = require("fs");
+const awsParamStore = require( 'aws-param-store' );
+const region = { region: 'us-east-1' };
 const log_page_size = 15;
 const secrets = require('/etc/pki/vizzyy/secrets');
 const PORT = secrets.PORT ? secrets.PORT : 443;
@@ -11,7 +12,7 @@ const db_config = {
     password: secrets.database.DB_PASS,
     database: secrets.database.DB_USER,
     ssl: {
-        ca: fs.readFileSync('/etc/pki/vizzyy/dbpub.crt')
+        ca: Buffer.from(awsParamStore.getParameterSync( '/epic-shelter-db-cert', region).Value, 'utf8')
     }
 };
 
