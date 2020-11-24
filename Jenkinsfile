@@ -107,7 +107,7 @@ pipeline {
             }
         }
 
-        stage("Deploy") {
+        stage("Push") {
             when {
                 expression {
                     return env.Deploy == "true"
@@ -118,13 +118,13 @@ pipeline {
                     sh("""
                         docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:${commitHash};
                         docker tag vizzyy/$serviceName:latest vizzyy/$serviceName:latest;
-                        docker push vizzyy/$serviceName:${commitHash};
+                        docker push vizzyy/$serviceName;
                     """)
                 }
             }
         }
 
-        stage("Start") {
+        stage("Deploy") {
             when {
                 expression {
                     return env.Deploy == "true"
