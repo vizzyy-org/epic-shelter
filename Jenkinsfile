@@ -7,7 +7,7 @@ String nodeVersion = ""
 String commitHash = ""
 Boolean deploymentCheckpoint = false
 Boolean rollback = false
-GString startContainerCommand = "docker run --log-driver=journald \
+GString startContainerCommand = "docker run --env NODE_ENV=production --log-driver=journald \
 --log-opt tag=$serviceName \
 --restart always \
 -d -p 443:443 \
@@ -93,7 +93,7 @@ pipeline {
                 script {
                     nodejs(nodeJSInstallationName: "Node $nodeVersion") {
                         echo 'Running Mocha Tests...'
-                        rc = sh(script: "npm run coverage", returnStatus: true)
+                        rc = sh(script: "NODE_ENV=test npm run coverage", returnStatus: true)
 
                         if (rc != 0) {
                             sh """
@@ -117,6 +117,7 @@ pipeline {
                 script {
                     sh("""
                         docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:${commitHash};
+                        docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:latest;
                         docker push vizzyy/$serviceName:${commitHash};
                     """)
                 }
@@ -161,7 +162,7 @@ pipeline {
         stage("Rollback") {
             when {
                 expression {
-                    return rollback
+                    return rollback == true
                 }
             }
             steps {
@@ -258,6 +259,7 @@ boolean confirmDeployed(){
         }
 
         if (!deployed) {
+            echo "FAILED TO DEPLOY!"
             rollback = true
 //            error("Failed to deploy.")
         }

@@ -24,7 +24,7 @@ module.exports = {
         rp(requestOptions).then(function(body) {
             res.send(body);
         }).catch(err => {
-            logging.append_to_log(err);
+            logging.append_to_log(err).then();
             res.redirect('/error');
         });
 
