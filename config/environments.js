@@ -1,8 +1,9 @@
 const awsParamStore = require( 'aws-param-store' );
 const region = { region: 'us-east-1' };
 const log_page_size = 15;
-const secrets = require('/etc/pki/vizzyy/secrets');
-const PORT = secrets.PORT ? secrets.PORT : 443;
+const secrets = JSON.parse(awsParamStore.getParameterSync( '/epic-shelter-secrets', region).Value);
+secrets.environment = process.env.NODE_ENV;
+const PORT = secrets.environment === "test" ? 9443 : 443;
 const cache_excluded_paths = /\/logs|\/streams$|\/motion$/g;
 const logging_excluded_paths = /\/logs\?page_num/
 const db_config = {
@@ -27,7 +28,7 @@ envOptions = {
         throttle_limit: 60,
         cache_ttl_seconds: 360000
     },
-    prod: {
+    production: {
         sslOptions: {
             requestCert: true,
             rejectUnauthorized: true
