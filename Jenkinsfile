@@ -72,9 +72,15 @@ pipeline {
             steps {
                 script {
                     nodejs(nodeJSInstallationName: "Node $nodeVersion") {
+
+                        try{
+                            sh ("docker rmi -f \\\$(docker images -a -q);")
+                        }catch (Exception e) {
+                            echo "No images to cleanup."
+                        }
+
                         // run npm outdated just to have an audit of what can be upgraded
                         sh("""
-                            docker rmi -f \$(docker images -a -q);
                             npm i --silent
                             npm outdated
                             docker build --build-arg NODE_VERSION=$nodeVersion --squash -t vizzyy/$serviceName:${commitHash} -t vizzyy/$serviceName:latest . --network=host;
