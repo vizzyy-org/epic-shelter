@@ -6,7 +6,8 @@
 ![CodeQL](https://github.com/vizzyy-org/epic-shelter/workflows/CodeQL/badge.svg?branch=master) 
 
 ```dockerfile
-FROM arm64v8/node:14-alpine
+ARG NODE_VERSION
+FROM arm64v8/node:${NODE_VERSION}-alpine
 WORKDIR /usr/src/app
 ENV TZ America/New_York
 COPY package*.json ./
