@@ -71,5 +71,6 @@ module.exports = {
     db_config: db_config,
     secrets: secrets,
     cache_excluded_paths: cache_excluded_paths,
-    logging_excluded_paths: logging_excluded_paths
+    logging_excluded_paths: logging_excluded_paths,
+    region: region
 };

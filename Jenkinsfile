@@ -74,7 +74,7 @@ pipeline {
                     nodejs(nodeJSInstallationName: "Node $nodeVersion") {
 
                         try{
-                            sh ("docker rmi -f \\\$(docker images -a -q);")
+                            sh ("docker rmi -f \$(docker images -a -q);")
                         }catch (Exception e) {
                             echo "No images to cleanup."
                         }

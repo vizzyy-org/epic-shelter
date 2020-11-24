@@ -1,16 +1,15 @@
-const fs = require('fs');
 const config = require('../config/environments');
 const logging = require('./db_helper');
-const env = config.envOptions[config.secrets.environment];
 const rp = require('request-promise');
+const awsParamStore = require("aws-param-store");
 
 const ssl_base_config = {
     uri: '',
     json: true,
     port: 443,
     method: 'GET',
-    key: fs.readFileSync(env.sslPath + env.rest_ssl_key),
-    cert: fs.readFileSync(env.sslPath + env.rest_ssl_cert),
+    key: Buffer.from(awsParamStore.getParameterSync( '/epic-shelter-rest-key', config.region).Value, 'utf8'),
+    cert: Buffer.from(awsParamStore.getParameterSync( '/epic-shelter-rest-cert', config.region).Value, 'utf8'),
     rejectUnauthorized: true
 }
 
