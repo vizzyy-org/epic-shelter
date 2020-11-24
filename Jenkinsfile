@@ -6,6 +6,7 @@ String serviceName = "epic-shelter"
 String nodeVersion = ""
 String commitHash = ""
 Boolean deploymentCheckpoint = false
+Boolean rollback = false
 GString startContainerCommand = "docker run --env NODE_ENV=production --log-driver=journald \
 --log-opt tag=$serviceName \
 --restart always \
@@ -158,7 +159,7 @@ pipeline {
             }
             steps {
                 script {
-                    confirmDeployed()
+                    rollback = !confirmDeployed()
                 }
             }
         }
@@ -166,7 +167,7 @@ pipeline {
         stage("Rollback") {
             when {
                 expression {
-                    return currentBuild.currentResult == 'UNSTABLE'
+                    return rollback == true
                 }
             }
             steps {
@@ -264,8 +265,6 @@ boolean confirmDeployed(){
 
         if (!deployed) {
             echo "FAILED TO DEPLOY!"
-            currentBuild.currentResult = 'UNSTABLE'
-//            error("Failed to deploy.")
         }
 
         return deployed

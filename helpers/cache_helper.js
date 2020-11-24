@@ -1,8 +1,7 @@
 const cache = require("memory-cache");
 let memCache = new cache.Cache();
-const secrets = require('/etc/pki/vizzyy/secrets');
 const env = require("../config/environments");
-let isDev = secrets.environment === "dev"
+let isDev = env.secrets.environment === "dev"
 
 module.exports = function (duration) {
     return (req, res, next) => {

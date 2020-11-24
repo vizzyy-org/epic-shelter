@@ -1,7 +1,6 @@
 const express = require('express');
-const secrets = require('/etc/pki/vizzyy/secrets');
 const rest_helper = require('../helpers/rest_helper')
-const logging = require("../helpers/db_helper");
+const env = require("../config/environments");
 const router = express.Router();
 
 router.get('/', function(req, res) {
@@ -12,21 +11,21 @@ router.get('/', function(req, res) {
 
 router.get('/open', function(req, res) {
     rest_helper.mutual_auth_call(
-        "https://" + secrets.HUB_HOST + '/door/open?entry=OPENED',
+        "https://" + env.secrets.HUB_HOST + '/door/open?entry=OPENED',
         'GET',
         {}, req, res);
 });
 
 router.get('/close', function(req, res) {
     rest_helper.mutual_auth_call(
-        "https://" + secrets.HUB_HOST + '/door/close?entry=CLOSED',
+        "https://" + env.secrets.HUB_HOST + '/door/close?entry=CLOSED',
         'GET',
         {}, req, res);
 });
 
 router.get('/status', function(req, res) {
     rest_helper.mutual_auth_call(
-        "https://" + secrets.HUB_HOST + '/door/status',
+        "https://" + env.secrets.HUB_HOST + '/door/status',
         'GET',
         {}, req, res);
 });

@@ -1,4 +1,3 @@
-const secrets = require('/etc/pki/vizzyy/secrets');
 const logging = require("./db_helper");
 const env = require("../config/environments");
 
@@ -8,10 +7,10 @@ module.exports = function () {
         let hasClientCert = Object.keys(clientCert).length; // return 0 if undefined peer cert
         let path = req.originalUrl || req.url;
         req.user = {
-            displayName: hasClientCert ? clientCert.subject.CN : `${secrets.environment}-USER`,
+            displayName: hasClientCert ? clientCert.subject.CN : `${env.secrets.environment}-USER`,
             validFrom: hasClientCert ? clientCert.valid_from : new Date().toDateString(),
             validTo: hasClientCert ? clientCert.valid_to : new Date().toDateString(),
-            fingerprint: hasClientCert ? clientCert.fingerprint : `${secrets.environment}-FINGERPRINT`
+            fingerprint: hasClientCert ? clientCert.fingerprint : `${env.secrets.environment}-FINGERPRINT`
         };
         //TODO: query params not logged
         if (!path.match(env.logging_excluded_paths))

@@ -1,6 +1,4 @@
 const express = require('express');
-const logging = require('../helpers/db_helper');
-const secrets = require('/etc/pki/vizzyy/secrets');
 const rest_helper = require('../helpers/rest_helper')
 const router = express.Router();
 const request = require("request");
@@ -11,12 +9,12 @@ router.get('/', function (req, res) {
 });
 
 router.get('/door', (req, res) => {
-    let reqUrl = 'https://' + secrets.HUB_HOST + '/video';
+    let reqUrl = 'https://' + env.secrets.HUB_HOST + '/video';
     handleStream(req, res, reqUrl);
 })
 
 router.get('/battery', (req, res) => {
-    let reqUrl = 'https://' + secrets.HUB_HOST + '/video2';
+    let reqUrl = 'https://' + env.secrets.HUB_HOST + '/video2';
     handleStream(req, res, reqUrl);
 })
 
@@ -36,7 +34,7 @@ function handleStream(req, res, reqUrl){
     });
 
     //Limit resources used -- 60000ms = 1 minute
-    let timeout = 60000 * parseInt(env.envOptions[secrets.environment].stream_limit_minutes);
+    let timeout = 60000 * parseInt(env.envOptions[env.secrets.environment].stream_limit_minutes);
     setTimeout(() => { stream.abort() }, timeout);
 }
 
