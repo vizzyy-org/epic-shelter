@@ -10,7 +10,6 @@ GString startContainerCommand = "docker run --env NODE_ENV=production --log-driv
 --log-opt tag=$serviceName \
 --restart always \
 -d -p 443:443 \
--v /etc/pki/vizzyy:/etc/pki/vizzyy:ro \
 --name $serviceName vizzyy/$serviceName:"
 
 try {
@@ -72,11 +71,11 @@ pipeline {
                 script {
                     nodejs(nodeJSInstallationName: "Node $nodeVersion") {
 
-                        try{
-                            sh ("docker rmi -f \$(docker images -a -q);")
-                        }catch (Exception e) {
-                            echo "No images to cleanup."
-                        }
+//                        try{
+//                            sh ("docker rmi -f \$(docker images -a -q);")
+//                        }catch (Exception e) {
+//                            echo "No images to cleanup."
+//                        }
 
                         // run npm outdated just to have an audit of what can be upgraded
                         sh("""
