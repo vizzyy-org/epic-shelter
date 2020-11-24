@@ -1,8 +1,9 @@
 const { constants } = require('crypto')
 const express = require('express');
 const helmet = require('helmet');
-const fs = require('fs');
 const bodyParser = require('body-parser');
+const RateLimit = require('express-rate-limit');
+const awsParamStore = require("aws-param-store");
 const path = require('path');
 const config = require('./config/environments');
 const logging = require('./helpers/db_helper');
@@ -19,9 +20,9 @@ const errors = require('./helpers/error_handling')
 const env = config.envOptions[config.secrets.environment];
 const app = express();
 const server = require('https').Server({
-    ca: env.sslOptions.ca ? fs.readFileSync(env.sslPath + env.sslOptions.ca) : [],
-    key: fs.readFileSync(env.sslPath + env.sslOptions.key),
-    cert: fs.readFileSync(env.sslPath + env.sslOptions.cert),
+    ca: Buffer.from(awsParamStore.getParameterSync( '/epic-shelter-server-ca', config.region).Value, 'utf8'),
+    key: Buffer.from(awsParamStore.getParameterSync( '/epic-shelter-server-key', config.region).Value, 'utf8'),
+    cert: Buffer.from(awsParamStore.getParameterSync( '/epic-shelter-server-cert', config.region).Value, 'utf8'),
     requestCert: env.sslOptions.requestCert,
     rejectUnauthorized: env.sslOptions.rejectUnauthorized,
     ciphers: [
@@ -45,12 +46,6 @@ const server = require('https').Server({
     honorCipherOrder: true,
     secureOptions: constants.SSL_OP_NO_TLSv1 | constants.SSL_OP_NO_TLSv1_1
 }, app);
-const RateLimit = require('express-rate-limit');
-const limiter = new RateLimit({
-    windowMs: 60*1000, // 1 minute
-    max: env.throttle_limit
-});
-
 
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
@@ -63,7 +58,10 @@ app.use(helmet.hsts({
     includeSubDomains: true,
     force: true
 }));
-app.use(limiter);
+app.use(new RateLimit({
+    windowMs: 60*1000, // 1 minute
+    max: env.throttle_limit
+}));
 app.use(x509());
 app.use(cacheHelper(env.cache_ttl_seconds));
 app.use('/favicon.ico', express.static('./public/favicon.ico'));
