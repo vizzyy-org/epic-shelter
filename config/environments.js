@@ -19,46 +19,28 @@ const db_config = {
 
 envOptions = {
     dev: {
-        sslPath: "/etc/pki/vizzyy/",
         sslOptions: {
-            ca: "server-ca.pem",
-            key: 'server-key.pem',
-            cert: 'server-cert.pem',
             requestCert: false,
             rejectUnauthorized: false
         },
-        rest_ssl_key: 'rest_private_key.pem',
-        rest_ssl_cert: 'rest_public_cert.pem',
         stream_limit_minutes: 60,
         throttle_limit: 60,
         cache_ttl_seconds: 360000
     },
     prod: {
-        sslPath: "/etc/pki/vizzyy/",
         sslOptions: {
-            ca: "server-ca.pem",
-            key: 'server-key.pem',
-            cert: 'server-cert.pem',
             requestCert: true,
             rejectUnauthorized: true
         },
-        rest_ssl_key: 'rest_private_key.pem',
-        rest_ssl_cert: 'rest_public_cert.pem',
         stream_limit_minutes: 1,
         throttle_limit: 300,
         cache_ttl_seconds: 36000
     },
     test: {
-        sslPath: "/etc/pki/vizzyy/",
         sslOptions: {
-            ca: "server-ca.pem",
-            key: 'server-key.pem',
-            cert: 'server-cert.pem',
             requestCert: false,
             rejectUnauthorized: false
         },
-        rest_ssl_key: 'rest_private_key.pem',
-        rest_ssl_cert: 'rest_public_cert.pem',
         stream_limit_minutes: 0,
         throttle_limit: 1000,
         cache_ttl_seconds: 30
