@@ -190,7 +190,7 @@ pipeline {
                     if(confirmDeployed()){
                         echo "ROLLBACK SUCCESS"
                     } else {
-                        echo "ROLLBACK FAILURE"
+                        error("ROLLBACK FAILURE")
                     }
                 }
             }
