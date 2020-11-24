@@ -76,7 +76,7 @@ pipeline {
                         sh("""
                             npm i --silent
                             npm outdated
-                            docker build --build-arg NODE_VERSION=$nodeVersion --squash -t vizzyy/$serviceName:${commitHash} . --network=host;
+                            docker build --build-arg NODE_VERSION=$nodeVersion --squash -t vizzyy/$serviceName:${commitHash} -t vizzyy/$serviceName:latest . --network=host;
                         """)
                     }
                 }
@@ -117,7 +117,7 @@ pipeline {
                 script {
                     sh("""
                         docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:${commitHash};
-                        docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:latest;
+                        docker tag vizzyy/$serviceName:latest vizzyy/$serviceName:latest;
                         docker push vizzyy/$serviceName:${commitHash};
                     """)
                 }
