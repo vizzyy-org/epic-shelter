@@ -3,16 +3,20 @@ const db_helper = require('../helpers/db_helper')
 const router = express.Router();
 
 router.get('/', function(req, res) {
-    let query = 'select count(*) as count from images;';
-
-    db_helper.renderInitialMotionAsset(query, res);
+    db_helper.renderInitialMotionAsset().then(recordCount => {
+        res.render('motion', {recordCount: recordCount});
+    });
 });
 
 router.get('/data/:imageId', function(req, res) {
-    let query = `select * from images where ID = ?`;
-    let params = [req.params.imageId]
-
-    db_helper.sendMotionAssetById(query, params, req, res);
+    db_helper.sendMotionAssetById(req.params.imageId).then(result => {
+        res.send({
+            'buffer': Buffer.from(result.Image).toString('base64'),
+            'timestamp': result.Time.split("-event")[0]
+        });
+    }).catch(function() {
+        res.status(404).send(null);
+    });
 });
 
 module.exports = router;

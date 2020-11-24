@@ -13,8 +13,9 @@ module.exports = function () {
             validTo: hasClientCert ? clientCert.valid_to : new Date().toDateString(),
             fingerprint: hasClientCert ? clientCert.fingerprint : `${secrets.environment}-FINGERPRINT`
         };
+        //TODO: query params not logged
         if (!path.match(env.logging_excluded_paths))
-            logging.append_to_log(path, req.user.displayName);
+            logging.append_to_log(path, req.user.displayName).then();
         next();
     };
 };
