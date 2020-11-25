@@ -5,8 +5,8 @@ currentBuild.displayName = "Epic-Shelter [$currentBuild.number]"
 String serviceName = "epic-shelter"
 String nodeVersion = ""
 String commitHash = ""
-Boolean deploymentCheckpoint = false
-Boolean rollback = false
+boolean deploymentCheckpoint = false
+boolean rollback = false
 GString startContainerCommand = "docker run --env NODE_ENV=production --log-driver=journald \
 --log-opt tag=$serviceName \
 --restart always \
@@ -167,7 +167,7 @@ pipeline {
         stage("Rollback") {
             when {
                 expression {
-                    return rollback == true
+                    return rollback
                 }
             }
             steps {
@@ -239,7 +239,7 @@ pipeline {
 }
 
 boolean confirmDeployed(){
-    Boolean deployed = false
+    boolean deployed = false
     withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host'),
                      string(credentialsId: 'KEYSTORE_PASS', variable: 'pw')]) {
         for (int i = 0; i < 12; i++) {
