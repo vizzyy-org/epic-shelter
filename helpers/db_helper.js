@@ -1,30 +1,23 @@
 const mysql = require('mysql');
 const env = require('../config/environments');
 
-//TODO: Can rework this as a connection pool
-let connection;
+//create mysql connection pool
+let connection = mysql.createPool(
+    env.db_config
+);
 
-function handleDisconnect() {
-    connection = mysql.createConnection(env.db_config);
+// Attempt to catch disconnects
+connection.on('connection', function (connection) {
+    console.log('DB Connection established');
 
-    connection.connect(function(err) {
-        if(err) {
-            console.log('Error when connecting to DB: ', err);
-            setTimeout(handleDisconnect, 2000);
-        }
+    connection.on('error', function (err) {
+        console.error(new Date(), 'MySQL error', err.code);
+    });
+    connection.on('close', function (err) {
+        console.error(new Date(), 'MySQL close', err);
     });
 
-    connection.on('error', function(err) {
-        console.log('Problem with DB connection: ', err);
-        if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-            handleDisconnect();
-        } else {
-            throw err;
-        }
-    });
-}
-
-handleDisconnect();
+});
 
 module.exports = {
     append_to_log: function (entry_text, user = "DEV-LOG"){

@@ -13,6 +13,7 @@ const db_config = {
     password: secrets.database.DB_PASS,
     database: secrets.database.DB_USER,
     connectTimeout: 60000,
+    connectionLimit: 10,
     ssl: {
         ca: Buffer.from(awsParamStore.getParameterSync( '/epic-shelter-db-cert', region).Value, 'utf8')
     }
