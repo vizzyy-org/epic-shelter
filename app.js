@@ -50,21 +50,26 @@ const server = require('https').Server({
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
+
+
+// Order matters -> top to bottom
+app.use(new RateLimit({
+    windowMs: 60*1000, // 1 minute
+    max: env.throttle_limit
+}));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet.hsts({
     maxAge: 31536000000, //one year
     includeSubDomains: true,
     force: true
 }));
-app.use(new RateLimit({
-    windowMs: 60*1000, // 1 minute
-    max: env.throttle_limit
-}));
+if (config.secrets.environment === "dev"){
+    app.use('/favicon.ico', express.static('./public/dev-favicon.ico'));
+}
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(x509());
 app.use(cacheHelper(env.cache_ttl_seconds));
-app.use('/favicon.ico', express.static('./public/favicon.ico'));
 app.use('/lights', lights);
 app.use('/streams', streams);
 app.use('/motion', motion);
