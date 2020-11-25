@@ -4,7 +4,7 @@ const log_page_size = 15;
 const secrets = JSON.parse(awsParamStore.getParameterSync( '/epic-shelter-secrets', region).Value);
 secrets.environment = process.env.NODE_ENV;
 const PORT = secrets.environment === "test" ? 9443 : 443;
-const cache_excluded_paths = /\/logs|\/streams$|\/motion$/g;
+const cache_excluded_paths = /\/logs|\/users|\/streams$|\/motion$/g;
 const logging_excluded_paths = /\/logs\?page_num/
 const db_config = {
     host: secrets.HUB_HOST,
