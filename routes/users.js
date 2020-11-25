@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
         userProfile: req.user,
         userProfileParsed: JSON.stringify(req.user, null, 2),
         title: 'Profile page',
-        ipaddress : req.ip
+        ipaddress : req.ip.toString().replace('::ffff:', '')
     });
 });
 
