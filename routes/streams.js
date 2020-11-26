@@ -19,7 +19,7 @@ router.get('/battery', (req, res) => {
 })
 
 function handleStream(req, res, reqUrl){
-    let requestOptions = Object.assign({}, rest_helper.ssl_base_config);
+    let requestOptions = Object.assign({}, env.ssl_base_config);
     requestOptions.uri = reqUrl;
     requestOptions.json = false;
 

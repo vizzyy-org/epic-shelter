@@ -1,11 +1,15 @@
 const awsParamStore = require( 'aws-param-store' );
+const { constants } = require('crypto')
 const region = { region: 'us-east-1' };
 const log_page_size = 15;
-const secrets = JSON.parse(awsParamStore.getParameterSync( '/epic-shelter-secrets', region).Value);
+const ssm_params = new Map(awsParamStore.getParametersByPathSync(
+    '/epic-shelter', region).map(i => [i.Name, i.Value]));
+const secrets = JSON.parse(ssm_params.get('/epic-shelter/secrets').toString());
 secrets.environment = process.env.NODE_ENV;
 const PORT = secrets.environment === "test" ? 9443 : 443;
 const cache_excluded_paths = /\/logs|\/users|\/streams$|\/motion$/g;
 const logging_excluded_paths = /\/logs\?page_num/
+
 const db_config = {
     host: secrets.HUB_HOST,
     port: secrets.database.DB_PORT,
@@ -15,11 +19,11 @@ const db_config = {
     connectTimeout: 60000,
     connectionLimit: 10,
     ssl: {
-        ca: Buffer.from(awsParamStore.getParameterSync( '/epic-shelter-db-cert', region).Value, 'utf8')
+        ca: Buffer.from(ssm_params.get( '/epic-shelter/db-cert').toString(), 'utf8')
     }
 };
 
-envOptions = {
+const envOptions = {
     dev: {
         sslOptions: {
             requestCert: false,
@@ -49,6 +53,50 @@ envOptions = {
     }
 };
 
+const serverConfig = {
+    ca: Buffer.from(ssm_params.get('/epic-shelter/server-ca').toString(), 'utf8'),
+    key: Buffer.from(ssm_params.get('/epic-shelter/server-key').toString(), 'utf8'),
+    cert: Buffer.from(ssm_params.get('/epic-shelter/server-cert').toString(), 'utf8'),
+    requestCert: envOptions[secrets.environment].sslOptions.requestCert,
+    rejectUnauthorized: envOptions[secrets.environment].sslOptions.rejectUnauthorized,
+    ciphers: [
+        "ECDHE-RSA-AES256-SHA384",
+        "DHE-RSA-AES256-SHA384",
+        "ECDHE-RSA-AES256-SHA256",
+        "DHE-RSA-AES256-SHA256",
+        "ECDHE-RSA-AES128-SHA256",
+        "DHE-RSA-AES128-SHA256",
+        "HIGH",
+        "!aNULL",
+        "!eNULL",
+        "!EXPORT",
+        "!DES",
+        "!RC4",
+        "!MD5",
+        "!PSK",
+        "!SRP",
+        "!CAMELLIA"
+    ].join(':'),
+    honorCipherOrder: true,
+    secureOptions: constants.SSL_OP_NO_TLSv1 | constants.SSL_OP_NO_TLSv1_1
+}
+
+const hstsConfig = {
+    maxAge: 31536000000, //one year
+    includeSubDomains: true,
+    force: true
+}
+
+const ssl_base_config = {
+    uri: '',
+    json: true,
+    port: 443,
+    method: 'GET',
+    key: Buffer.from(ssm_params.get('/epic-shelter/rest-key').toString(), 'utf8'),
+    cert: Buffer.from(ssm_params.get('/epic-shelter/rest-cert').toString(), 'utf8'),
+    rejectUnauthorized: true
+}
+
 module.exports = {
     PORT: PORT,
     envOptions: envOptions,
@@ -57,5 +105,8 @@ module.exports = {
     secrets: secrets,
     cache_excluded_paths: cache_excluded_paths,
     logging_excluded_paths: logging_excluded_paths,
-    region: region
+    region: region,
+    serverConfig: serverConfig,
+    hstsConfig: hstsConfig,
+    ssl_base_config: ssl_base_config
 };
