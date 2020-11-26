@@ -126,7 +126,7 @@ h1 {
 }
 
 .active {
-  background-color: #4CAF50;
+  background-color: #3f96f8;
   color: white;
 }
 
@@ -165,7 +165,7 @@ h1 {
 
 .loader {
   border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #4CAF50; /* Blue */
+  border-top: 16px solid #3f96f8; /* Blue */
   border-radius: 50%;
   width: 120px;
   height: 120px;

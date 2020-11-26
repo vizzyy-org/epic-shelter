@@ -1,5 +1,4 @@
 const express = require('express');
-const rest_helper = require('../helpers/rest_helper')
 const router = express.Router();
 const request = require("request");
 const env = require('../config/environments')
