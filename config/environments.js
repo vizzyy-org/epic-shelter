@@ -40,7 +40,7 @@ const envOptions = {
         },
         stream_limit_minutes: 1,
         throttle_limit: 300,
-        cache_ttl_seconds: 36000
+        cache_ttl_seconds: 3600
     },
     test: {
         sslOptions: {
