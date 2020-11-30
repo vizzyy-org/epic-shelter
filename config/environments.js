@@ -4,6 +4,14 @@ const region = { region: 'us-east-1' };
 const log_page_size = 15;
 const ssm_params = new Map(awsParamStore.getParametersByPathSync(
     '/epic-shelter', region).map(i => [i.Name, i.Value]));
+
+let ca_entries = [];
+
+ssm_params.forEach(function(value, key){
+    if(key.indexOf('/epic-shelter/server-ca/') > -1)
+        ca_entries.push(Buffer.from(ssm_params.get(key).toString(), 'utf8'))
+});
+
 const secrets = JSON.parse(ssm_params.get('/epic-shelter/secrets').toString());
 secrets.environment = process.env.NODE_ENV;
 const PORT = secrets.environment === "test" ? 9443 : 443;
@@ -54,7 +62,7 @@ const envOptions = {
 };
 
 const serverConfig = {
-    ca: Buffer.from(ssm_params.get('/epic-shelter/server-ca').toString(), 'utf8'),
+    ca: ca_entries,
     key: Buffer.from(ssm_params.get('/epic-shelter/server-key').toString(), 'utf8'),
     cert: Buffer.from(ssm_params.get('/epic-shelter/server-cert').toString(), 'utf8'),
     requestCert: envOptions[secrets.environment].sslOptions.requestCert,
