@@ -13,7 +13,7 @@ module.exports = function () {
             fingerprint: hasClientCert ? clientCert.fingerprint : `${env.secrets.environment}-FINGERPRINT`
         };
         //TODO: query params not logged
-        if (!path.match(env.logging_excluded_paths))
+        if (!path.match(env.logging_excluded_paths) && req.user.displayName !== "lambda")
             logging.append_to_log(path, req.user.displayName).then();
         next();
     };
