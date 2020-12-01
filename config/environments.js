@@ -15,7 +15,7 @@ ssm_params.forEach(function(value, key){
 const secrets = JSON.parse(ssm_params.get('/epic-shelter/secrets').toString());
 secrets.environment = process.env.NODE_ENV;
 const PORT = secrets.environment === "test" ? 9443 : 443;
-const cache_excluded_paths = /\/logs|\/users|\/streams$|\/motion$/g;
+const cache_excluded_paths = /\/logs|\/error|\/users|\/streams$|\/motion$/g;
 const logging_excluded_paths = /\/logs\?page_num/
 
 const db_config = {

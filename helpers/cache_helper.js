@@ -23,7 +23,12 @@ module.exports = function (duration) {
             if (isDev) console.log("Cache miss!");
             res.sendResponse = res.send;
             res.send = (body) => {
-                memCache.put(key, body, duration * 1000);
+                // Only cache 200 status codes
+                if(res.statusCode === 200){
+                    memCache.put(key, body, duration * 1000);
+                } else {
+                    console.log(`Not caching request with status: ${res.statusCode}`)
+                }
                 res.sendResponse(body);
             }
             next();
