@@ -51,7 +51,7 @@ server.listen(config.PORT);
 server.on('listening', function() {
     let addr = server.address();
     let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-    logging.append_to_log('Listening on ' + bind, null).then();
+    logging.append_to_log('Listening on ' + bind, null).catch(console.error);
 });
 
 module.exports = server;

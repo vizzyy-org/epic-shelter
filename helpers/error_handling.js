@@ -18,8 +18,11 @@ module.exports = {
     }},
     errorHandler: function () { return function errorHandler(err, req, res, next) {
         res.status(err.status || 500);
-        console.log(err);
-        logging_helper.append_to_log(err, null);
+        try {
+            logging_helper.append_to_log(err, null).catch(console.error);
+        } catch {
+            console.log("Could not append error to log. DB unavailable?")
+        }
         res.render('error', {
             locals: {
                 message: {

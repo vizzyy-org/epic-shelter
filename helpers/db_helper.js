@@ -33,14 +33,12 @@ module.exports = {
                     environment: env.secrets.environment
                 };
                 connection.query('INSERT INTO logs SET ?', entry, function (error, results, fields) {
-                    if (error) {
-                        console.log(error);
-                        reject(error);
-                    }
-                    resolve(results);
+                    if (error)
+                        reject(error)
+                    else
+                        resolve(results);
                 });
             } catch (e) {
-                console.log(e);
                 reject(e);
             }
             console.log(final_entry)
@@ -52,10 +50,8 @@ module.exports = {
 
             connection.query('SELECT * FROM logs WHERE environment = ? ORDER by ID DESC LIMIT ? OFFSET ?',
                 [env.secrets.environment, page_size, offset],
-                function (error, results, fields) {
+                function (error, results) {
                     if (error) {
-                        if(env.secrets.environment === "dev")
-                            console.log(error);
                         reject(error)
                     } else {
                         resolve({
@@ -74,21 +70,22 @@ module.exports = {
                 let query = 'select count(*) as count from images;';
 
                 connection.query(query, function (error, results, fields) {
-                    if (error) throw error;
+                    if (error) {
+                        reject(error)
+                    } else {
 
-                    const record = results[0]; // select first row
+                        const record = results[0]; // select first row
 
-                    // Got no BLOB data
-                    if (record === undefined)
-                        console.log("No result found getting record record.");
-                    else
-                        console.log("Motion Assets Count: " + record.count);
+                        // Got no BLOB data
+                        if (record === undefined)
+                            console.log("No result found getting record record.");
+                        else
+                            console.log("Motion Assets Count: " + record.count);
 
-                    resolve(record.count);
-
+                        resolve(record.count);
+                    }
                 });
             } catch (e) {
-                console.log(e);
                 reject(e);
             }
         });
@@ -98,22 +95,23 @@ module.exports = {
             try {
                 let query = `select * from images where ID = ?`;
 
-                connection.query(query, [imageId], function (error, results, fields) {
-                    if (error) throw error;
-
-                    const record = results[0]; // select first row
-
-                    // Got no BLOB data
-                    if (record === undefined) {
-                        console.log("No result -- ID not in DB?");
-                        reject(new Error("Record not found."))
+                connection.query(query, [imageId], function (error, results) {
+                    if (error) {
+                        reject(error)
                     } else {
-                        console.log("BLOB data found.");
-                        resolve(record);
+                        const record = results[0]; // select first row
+
+                        // Got no BLOB data
+                        if (record === undefined) {
+                            console.log("No result -- ID not in DB?");
+                            reject(new Error("Record not found."))
+                        } else {
+                            console.log("BLOB data found.");
+                            resolve(record);
+                        }
                     }
                 });
             } catch (e) {
-                console.log(e);
                 reject(e);
             }
         });

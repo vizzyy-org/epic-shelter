@@ -14,7 +14,7 @@ module.exports = function () {
         };
         //TODO: query params not logged
         if (!path.match(env.logging_excluded_paths) && req.user.displayName !== "lambda")
-            logging.append_to_log(path, req.user.displayName).then();
+            logging.append_to_log(path, req.user.displayName).catch(console.error);
         next();
     };
 };

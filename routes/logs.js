@@ -13,8 +13,8 @@ router.get('/', function(req, res) {
             page_num: results.page_num
         });
     }).catch(function(err){
-        console.log(err);
-        res.end();
+        console.error(err);
+        res.redirect('/error');
     });
 });
 
