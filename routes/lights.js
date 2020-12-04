@@ -80,5 +80,12 @@ router.post('/bedroom/lamp', function(req, res) {
         {}, req, res);
 });
 
+router.get('/bedroom/status', function(req, res) {
+    rest_helper.mutual_auth_call(
+        "https://" + env.secrets.HUB_HOST + '/lights/status',
+        'GET',
+        {}, req, res);
+});
+
 
 module.exports = router;
