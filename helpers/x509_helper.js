@@ -6,6 +6,9 @@ module.exports = function () {
         let clientCert = req.connection.getPeerCertificate();
         let hasClientCert = Object.keys(clientCert).length; // return 0 if undefined peer cert
         let path = req.originalUrl || req.url;
+        let query = Object.keys(req.query).length ? ` - query: ${JSON.stringify(req.query)}` : ''
+        let body = Object.keys(req.body).length ? ` - body: ${JSON.stringify(req.body)}` : ''
+        path += query + body
         req.user = {
             displayName: hasClientCert ? clientCert.subject.CN : `${env.secrets.environment}-USER`,
             validFrom: hasClientCert ? clientCert.valid_from : new Date().toDateString(),
