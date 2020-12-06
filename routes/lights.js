@@ -30,6 +30,14 @@ router.post('/strip/inside', function(req, res) {
         {}, req, res);
 });
 
+// query inside light strip status
+router.get('/strip/inside/status', function(req, res) {
+    rest_helper.mutual_auth_call(
+        "https://" + env.secrets.HUB_HOST + '/inside/status',
+        'GET',
+        {}, req, res);
+});
+
 // toggle inside lights strip rgb
 router.post('/strip/inside/custom', function(req, res) {
     rest_helper.mutual_auth_call(
@@ -59,6 +67,14 @@ router.post('/strip/outside/custom', function(req, res) {
 router.post('/strip/outside', function(req, res) {
     rest_helper.mutual_auth_call(
         "https://" + env.secrets.HUB_HOST + '/outside/arrange/' + req.body.status,
+        'GET',
+        {}, req, res);
+});
+
+// query outside light strip status
+router.get('/strip/outside/status', function(req, res) {
+    rest_helper.mutual_auth_call(
+        "https://" + env.secrets.HUB_HOST + '/outside/status',
         'GET',
         {}, req, res);
 });
