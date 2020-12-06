@@ -18,8 +18,8 @@ router.get('/data/:imageId', function(req, res) {
             'timestamp': result.Time.split("-event")[0]
         });
     }).catch(function(err) {
-        res.status(404).send(err);
         console.error(err);
+        res.status(404).send("An exception occurred");
     });
 });
 
