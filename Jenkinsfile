@@ -128,7 +128,29 @@ pipeline {
             steps {
                 script {
                     deploymentCheckpoint = true;
-                    rollback = !deploy(instances, serviceName)
+                    for (int i = 1; i <= instances; i++) {
+                        instance = "$i"
+                        echo "Deploying instance #$instance"
+                        GString startContainerCommand = startContainer(instance, commitHash)
+                        def cmd = """
+                        docker stop $serviceName$instance;
+                        docker rm $serviceName$instance;
+                        $startContainerCommand
+                    """
+                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+                        }
+                        sleep time: 10, unit: 'SECONDS'
+                    }
+
+                    try {
+                        String remove_excess_images = "docker rmi -f \$(docker images -a -q);"
+                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$remove_excess_images'")
+                        }
+                    } catch (Exception e) {
+                        echo "Cannot remove images in use."
+                    }
                 }
             }
         }
@@ -155,7 +177,32 @@ pipeline {
             steps {
                 script {
                     if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
-                        deploy(instances, serviceName)
+                        commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
+                        commitHash = commitHash.substring(0, 7)
+                        echo "Rolling back to previous successful image. Hash: $commitHash"
+                        for (int i = 1; i <= instances; i++) {
+                            instance = "$i"
+                            echo "Deploying instance #$instance"
+                            GString startContainerCommand = startContainer(instance, commitHash)
+                            def cmd = """
+                                docker stop $serviceName$instance;
+                                docker rm $serviceName$instance;
+                                $startContainerCommand
+                            """
+                            withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                                sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+                            }
+                            sleep time: 10, unit: 'SECONDS'
+                        }
+
+                        try {
+                            String remove_excess_images = "docker rmi -f \$(docker images -a -q);"
+                            withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                                sh("ssh -i ~/ec2pair.pem ec2-user@$host '$remove_excess_images'")
+                            }
+                        } catch (Exception e) {
+                            echo "Cannot remove images in use."
+                        }
                     }
 
                     if(confirmDeployed()){
@@ -215,38 +262,6 @@ GString startContainer(String instance, String hash){
 --restart always \
 -d -p 500$instance:443 \
 --name epic-shelter$instance vizzyy/epic-shelter:$hash"
-}
-
-boolean deploy(instances, serviceName){
-    try {
-        for (int i = 1; i <= instances; i++) {
-            instance = "$i"
-            echo "Deploying instance #$instance"
-            GString startContainerCommand = startContainer(instance, commitHash)
-            def cmd = """
-                            docker stop $serviceName$instance;
-                            docker rm $serviceName$instance;
-                            $startContainerCommand
-                        """
-            withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
-            }
-            sleep time: 10, unit: 'SECONDS'
-        }
-    } catch (Exception e) {
-        echo "Failed to deploy?"
-    }
-
-    try {
-        String remove_excess_images = "docker rmi -f \$(docker images -a -q);"
-        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$remove_excess_images'")
-        }
-    } catch (Exception e) {
-        echo "Cannot remove images in use."
-    }
-
-    return true
 }
 
 boolean confirmDeployed(){
