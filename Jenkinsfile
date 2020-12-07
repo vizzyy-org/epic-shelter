@@ -9,11 +9,6 @@ boolean deploymentCheckpoint = false
 boolean rollback = false
 String instance = ""
 int instances = 2
-GString startContainerCommand = "docker run --env NODE_ENV=production --log-driver=journald \
---log-opt tag=$serviceName \
---restart always \
--d -p 500$instance:443 \
---name $serviceName$instance vizzyy/$serviceName:"
 
 try {
     if (ISSUE_NUMBER)
@@ -136,10 +131,11 @@ pipeline {
                     for (int i = 1; i <= instances; i++) {
                         instance = "$i"
                         echo "Deploying instance #$instance"
+                        GString startContainerCommand = startContainer(instance, commitHash)
                         def cmd = """
                             docker stop $serviceName$instance;
                             docker rm $serviceName$instance;
-                            $startContainerCommand$commitHash
+                            $startContainerCommand
                         """
                         withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
                             sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
@@ -240,6 +236,14 @@ pipeline {
             deleteDir()
         }
     }
+}
+
+GString startContainer(String instance, String hash){
+    return "docker run --env NODE_ENV=production --log-driver=journald \
+--log-opt tag=epic-shelter \
+--restart always \
+-d -p 500$instance:443 \
+--name epic-shelter$instance vizzyy/epic-shelter:$hash"
 }
 
 boolean confirmDeployed(){
