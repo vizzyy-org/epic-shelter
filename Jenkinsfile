@@ -176,7 +176,7 @@ pipeline {
             }
             steps {
                 script {
-//                    if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
+                    if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
 //                        commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
 //                        commitHash = commitHash.substring(0, 7)
 //                        echo "Rolling back to previous successful image. Hash: $commitHash"
@@ -189,8 +189,8 @@ pipeline {
 //                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
 //                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
 //                        }
-//                    }
-//
+                    }
+
 //                    if(confirmDeployed()){
 //                        echo "ROLLBACK SUCCESS"
 //                    } else {
