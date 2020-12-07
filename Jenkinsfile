@@ -7,11 +7,13 @@ String nodeVersion = ""
 String commitHash = ""
 boolean deploymentCheckpoint = false
 boolean rollback = false
+String instance = ""
+int instances = 2
 GString startContainerCommand = "docker run --env NODE_ENV=production --log-driver=journald \
 --log-opt tag=$serviceName \
 --restart always \
--d -p 443:443 \
---name $serviceName vizzyy/$serviceName:"
+-d -p 500$instance:443 \
+--name $serviceName$instance vizzyy/$serviceName:"
 
 try {
     if (ISSUE_NUMBER)
@@ -71,13 +73,6 @@ pipeline {
             steps {
                 script {
                     nodejs(nodeJSInstallationName: "Node $nodeVersion") {
-
-//                        try{
-//                            sh ("docker rmi -f \$(docker images -a -q);")
-//                        }catch (Exception e) {
-//                            echo "No images to cleanup."
-//                        }
-
                         // run npm outdated just to have an audit of what can be upgraded
                         sh("""
                             npm i --silent
@@ -138,14 +133,23 @@ pipeline {
             steps {
                 script {
                     deploymentCheckpoint = true;
-                    def cmd = """
-                        docker stop $serviceName;
-                        docker rm $serviceName;
-                        docker rmi -f \$(docker images -a -q);
-                        $startContainerCommand$commitHash
-                    """
+                    for (int i = 1; i <= instances; i++) {
+                        instance = "$i"
+                        echo "Deploying instance #$instance"
+                        def cmd = """
+                            docker stop $serviceName$instance;
+                            docker rm $serviceName$instance;
+                            $startContainerCommand$commitHash
+                        """
+                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+                        }
+                        sleep time: 10, unit: 'SECONDS'
+                    }
+
+                    String remove_excess_images = "docker rmi -f \$(docker images -a -q);"
                     withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                        sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+                        sh("ssh -i ~/ec2pair.pem ec2-user@$host '$remove_excess_images'")
                     }
                 }
             }
@@ -172,26 +176,26 @@ pipeline {
             }
             steps {
                 script {
-                    if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
-                        commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
-                        commitHash = commitHash.substring(0, 7)
-                        echo "Rolling back to previous successful image. Hash: $commitHash"
-                        def cmd = """
-                            docker stop $serviceName;
-                            docker rm $serviceName;
-                            docker rmi -f \$(docker images -a -q);
-                            $startContainerCommand$commitHash
-                        """
-                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
-                        }
-                    }
-
-                    if(confirmDeployed()){
-                        echo "ROLLBACK SUCCESS"
-                    } else {
-                        error("ROLLBACK FAILURE")
-                    }
+//                    if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
+//                        commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
+//                        commitHash = commitHash.substring(0, 7)
+//                        echo "Rolling back to previous successful image. Hash: $commitHash"
+//                        def cmd = """
+//                            docker stop $serviceName;
+//                            docker rm $serviceName;
+//                            docker rmi -f \$(docker images -a -q);
+//                            $startContainerCommand$commitHash
+//                        """
+//                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+//                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$cmd'")
+//                        }
+//                    }
+//
+//                    if(confirmDeployed()){
+//                        echo "ROLLBACK SUCCESS"
+//                    } else {
+//                        error("ROLLBACK FAILURE")
+//                    }
                 }
             }
         }
