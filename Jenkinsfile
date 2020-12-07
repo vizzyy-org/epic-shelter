@@ -143,9 +143,13 @@ pipeline {
                         sleep time: 10, unit: 'SECONDS'
                     }
 
-                    String remove_excess_images = "docker rmi -f \$(docker images -a -q);"
-                    withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
-                        sh("ssh -i ~/ec2pair.pem ec2-user@$host '$remove_excess_images'")
+                    try {
+                        String remove_excess_images = "docker rmi -f \$(docker images -a -q);"
+                        withCredentials([string(credentialsId: 'MAIN_SITE_HOST', variable: 'host')]) {
+                            sh("ssh -i ~/ec2pair.pem ec2-user@$host '$remove_excess_images'")
+                        }
+                    } catch (Exception e) {
+                        echo "Cannot remove images in use."
                     }
                 }
             }
