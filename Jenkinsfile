@@ -29,7 +29,7 @@ pipeline {
         booleanParam(name: 'Build', defaultValue: true, description: 'Build latest artifact')
         booleanParam(name: 'Deploy', defaultValue: true, description: 'Deploy latest artifact')
         booleanParam(name: 'Test', defaultValue: true, description: 'Run test suite')
-        string(name: 'Instances', defaultValue: '2', description: 'New secret value.')
+        string(name: 'Instances', defaultValue: '2', description: 'Number of load-balanced instances.')
     }
     stages {
         stage("Acknowledge") {
@@ -71,7 +71,7 @@ pipeline {
                         // run npm outdated just to have an audit of what can be upgraded
                         sh("""
                             npm i --silent
-                            npm outdated
+                            npm outdated > outdated.txt
                             docker build --build-arg NODE_VERSION=$nodeVersion --squash -t vizzyy/$serviceName:${commitHash} -t vizzyy/$serviceName:latest . --network=host;
                         """)
                     }
@@ -218,6 +218,7 @@ pipeline {
     post {
         always {
             publishCoverage adapters: [istanbulCoberturaAdapter('coverage/cobertura-coverage.xml')]
+            archiveArtifacts artifacts: 'outdated.txt', onlyIfSuccessful: true
         }
         success {
             script {
