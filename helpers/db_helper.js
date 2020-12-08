@@ -30,6 +30,7 @@ module.exports = {
                     date: new Date(),
                     message: final_entry,
                     service: "epic-shelter",
+                    instance: env.instance_id,
                     environment: env.secrets.environment
                 };
                 connection.query('INSERT INTO logs SET ?', entry, function (error, results, fields) {

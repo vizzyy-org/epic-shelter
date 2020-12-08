@@ -13,24 +13,28 @@
             </div>
             <table>
                 <div class="flex-container-row" >
-                    <div style="width:50vw; border: 2px solid dimgray;border-top-width: 4px;border-bottom-width: 1px;" class="flex-container-column">DateTime</div>
-                    <div style="width:50vw; border: 2px solid dimgray;border-top-width: 4px;border-bottom-width: 1px;" class="flex-container-column">Entry</div>
+                    <div style="width:33vw; border: 2px solid dimgray;border-top-width: 4px;border-bottom-width: 1px;" class="flex-container-column">DateTime</div>
+                    <div style="width:20vw; border: 2px solid dimgray;border-top-width: 4px;border-bottom-width: 1px;" class="flex-container-column">Instance</div>
+                    <div style="width:46vw; border: 2px solid dimgray;border-top-width: 4px;border-bottom-width: 1px;" class="flex-container-column">Entry</div>
                 </div>
                 <div class="flex-container-row" >
-                    <div style="width:50vw; border: 1px solid dimgray;border-top-width: 0px;" class="flex-container-column"></div>
-                    <div style="width:50vw; border: 1px solid dimgray;border-top-width: 0px;" class="flex-container-column"></div>
+                    <div style="width:33vw; border: 1px solid dimgray;border-top-width: 0px;" class="flex-container-column"></div>
+                    <div style="width:20vw; border: 1px solid dimgray;border-top-width: 0px;" class="flex-container-column"></div>
+                    <div style="width:46vw; border: 1px solid dimgray;border-top-width: 0px;" class="flex-container-column"></div>
                 </div>
                 <% for (item in log_entries) { %>
                 <tr>
                     <div class="flex-container-row" style="font-size: 1.3vh">
-                        <div style="width:50vw; border: 2px solid dimgray; border-bottom: 0px;" class="flex-container-column"><%- log_entries[item].date.toLocaleString() %></div>
-                        <div style="width:50vw; border: 2px solid dimgray; border-bottom: 0px;" class="flex-container-column"><%- log_entries[item].message %></div>
+                        <div style="width:33vw; border: 2px solid dimgray; border-bottom: 0px;" class="flex-container-column"><%- log_entries[item].date.toLocaleString() %></div>
+                        <div style="width:20vw; border: 2px solid dimgray; border-bottom: 0px;" class="flex-container-column"><%- log_entries[item].instance.toString().substring(1, 8) %></div>
+                        <div style="width:46vw; border: 2px solid dimgray; border-bottom: 0px;" class="flex-container-column"><%- log_entries[item].message %></div>
                     </div>
                 </tr>
                 <% } %>
                 <div class="flex-container-row" >
-                    <div style="width:50vw; border-bottom: 2px solid dimgray;" class="flex-container-column"></div>
-                    <div style="width:50vw; border-bottom: 2px solid dimgray;" class="flex-container-column"></div>
+                    <div style="width:33vw; border-bottom: 2px solid dimgray;" class="flex-container-column"></div>
+                    <div style="width:20vw; border-bottom: 2px solid dimgray;" class="flex-container-column"></div>
+                    <div style="width:46vw; border-bottom: 2px solid dimgray;" class="flex-container-column"></div>
                 </div>
                 <br><br><br>
             </table>
