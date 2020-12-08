@@ -1,5 +1,7 @@
 const awsParamStore = require( 'aws-param-store' );
 const { constants } = require('crypto')
+const uuidv4 = require('uuid/v4');
+const instance_id = uuidv4();
 const region = { region: 'us-east-1' };
 const log_page_size = 15;
 const ssm_params = new Map(awsParamStore.getParametersByPathSync(
@@ -116,5 +118,6 @@ module.exports = {
     region: region,
     serverConfig: serverConfig,
     hstsConfig: hstsConfig,
-    ssl_base_config: ssl_base_config
+    ssl_base_config: ssl_base_config,
+    instance_id: instance_id
 };
