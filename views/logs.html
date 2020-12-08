@@ -26,7 +26,7 @@
                 <tr>
                     <div class="flex-container-row" style="font-size: 1.3vh">
                         <div style="width:33vw; border: 2px solid dimgray; border-bottom: 0px;" class="flex-container-column"><%- log_entries[item].date.toLocaleString() %></div>
-                        <div style="width:20vw; border: 2px solid dimgray; border-bottom: 0px;" class="flex-container-column"><%- log_entries[item].instance.toString().substring(1, 8) %></div>
+                        <div style="width:20vw; border: 2px solid dimgray; border-bottom: 0px;" class="flex-container-column"><%- log_entries[item].instance.toString().substring(0, 8) %></div>
                         <div style="width:46vw; border: 2px solid dimgray; border-bottom: 0px;" class="flex-container-column"><%- log_entries[item].message %></div>
                     </div>
                 </tr>
