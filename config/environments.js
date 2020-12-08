@@ -1,6 +1,6 @@
 const awsParamStore = require( 'aws-param-store' );
 const { constants } = require('crypto')
-const uuidv4 = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 const instance_id = uuidv4();
 const region = { region: 'us-east-1' };
 const log_page_size = 15;
