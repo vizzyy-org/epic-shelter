@@ -90,8 +90,8 @@ router.post('/bedroom/xmas', function(req, res) {
 });
 
 router.post('/bedroom/lamp', function(req, res) {
-    rest_helper.mutual_auth_call(
-        "https://" + env.secrets.HUB_HOST + '/lights/light1?status=' + req.body.status,
+    rest_helper.mutual_auth_call( // Reroute to Christmas tree for now
+        "https://" + env.secrets.HUB_HOST + '/tree/light2?status=' + req.body.status,
         'GET',
         {}, req, res);
 });
