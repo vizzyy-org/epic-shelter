@@ -19,6 +19,7 @@
             <div id="myBody" class="flex-container-column">
                 <div id="assetId" style="font-size: 1.3vh" class="flex-container-row">ID: <%- recordCount -%></div>
                 <div id="assetDate" style="font-size: 1.3vh" class="flex-container-row"></div>
+                <div id="assetTime" style="font-size: 1.3vh" class="flex-container-row"></div>
             </div>
             <input class="nav-bs" type="submit" value="Next" onclick="forward()">
         </div>
@@ -48,7 +49,8 @@
                 let resp = JSON.parse(this.response);
                 document.getElementById("image").innerHTML = "<img style=\"max-width:100%;max-height:100%;\" src=\"data:image/gif;base64,"+resp.buffer+"\">";
                 document.getElementById("assetId").innerHTML = "ID: "+id;
-                document.getElementById("assetDate").innerHTML = resp.timestamp;
+                document.getElementById("assetDate").innerHTML = resp.date;
+                document.getElementById("assetTime").innerHTML = resp.time;
             } else if (this.readyState == 4 && this.status == 404) {
                 document.getElementById("image").innerHTML = "<img style=\"max-width:90vw;max-height:20vh;\" src=\"/image-not-found.png\">";
                 document.getElementById("assetId").innerHTML = id;
