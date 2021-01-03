@@ -68,7 +68,7 @@ module.exports = {
     metrics_canary: function() {
         return new Promise(function(resolve, reject) {
 
-            connection.query('SELECT * FROM graphing_data.server_metrics where timestamp >= (NOW() - INTERVAL 2 MINUTE) limit 5', [],
+            connection.query('select * from graphing_data.server_metrics order by id desc limit 5', [],
                 function (error, results) {
                     if (error) {
                         reject(error)
