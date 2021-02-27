@@ -103,5 +103,23 @@ router.get('/bedroom/status', function(req, res) {
         {}, req, res);
 });
 
+router.get('/bedtime', function(req, res) {
+    rest_helper.mutual_auth_call(
+        "https://" + env.secrets.HUB_HOST + '/lights/light2?status=false',
+        'GET',
+        {}, req, res);
+    rest_helper.mutual_auth_call(
+        "https://" + env.secrets.HUB_HOST + '/inside/arrange/clear',
+        'GET',
+        {}, req, res);
+    rest_helper.mutual_auth_call(
+        "https://" + env.secrets.HUB_HOST + '/outside/arrange/clear',
+        'GET',
+        {}, req, res);
+    rest_helper.mutual_auth_call( // Reroute to Christmas tree for now
+        "https://" + env.secrets.HUB_HOST + '/tree/light2?status=false',
+        'GET',
+        {}, req, res);
+});
 
 module.exports = router;
