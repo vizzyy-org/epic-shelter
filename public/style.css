@@ -86,10 +86,9 @@ h1 {
 }
 
 .mobile-container {
-  max-width: 98vw;
   margin: auto;
   background-color: #555;
-  height: 85vh;
+  height: auto;
   color: white;
   border-radius: 10px;
 }

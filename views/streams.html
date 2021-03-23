@@ -2,19 +2,27 @@
 <html>
 <%- include('headers.html'); -%>
 <title>Stream</title>
+<style>
+    .flex-container {
+        display: flex;
+        width: auto;
+        height: auto;
+        text-align: center;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+    }
+</style>
 <body>
     <div class="mobile-container">
         <%- include('nav.html'); -%>
-        <iframe name="dummyframe" style="width:0; height:0; border:none" ></iframe>
-        <div id="myBody" class="flex-container-column">
+        <div class="flex-container-row">
             <h2>Streams</h2>
-            <div class="flex-container-row">
-                <img class="stream" src="/streams/door"  alt="door"/>
+        </div>
+        <div class="flex-container-row">
+            <div class="flex-container">
+                <img style="object-fit: cover; width: 100%; height: auto;" src="/streams/door"  alt="door"/>
             </div>
-            <div><br></div>
-<!--            <div class="flex-container-row">-->
-<!--                <img class="stream" src="/streams/battery"/>-->
-<!--            </div>-->
         </div>
     </div>
 </body>
