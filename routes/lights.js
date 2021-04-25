@@ -91,7 +91,7 @@ router.post('/bedroom/xmas', function(req, res) {
 
 router.post('/bedroom/lamp', function(req, res) {
     rest_helper.mutual_auth_call( // Reroute to Christmas tree for now
-        "https://" + env.secrets.HUB_HOST + '/tree/light2?status=' + req.body.status,
+        "https://" + env.secrets.HUB_HOST + '/lights/tree/light2?status=' + req.body.status,
         'GET',
         {}, req, res);
 });
@@ -117,7 +117,7 @@ router.get('/bedtime', function(req, res) {
         'GET',
         {}, req, res);
     rest_helper.mutual_auth_call( // Reroute to Christmas tree for now
-        "https://" + env.secrets.HUB_HOST + '/tree/light2?status=false',
+        "https://" + env.secrets.HUB_HOST + '/lights/tree/light2?status=false',
         'GET',
         {}, req, res);
 });
