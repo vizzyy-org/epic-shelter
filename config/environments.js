@@ -66,7 +66,8 @@ const envOptions = {
 const serverConfig = {
     ca: ca_entries,
     key: Buffer.from(ssm_params.get('/epic-shelter/server-key').toString(), 'utf8'),
-    cert: Buffer.from(ssm_params.get('/epic-shelter/server-cert').toString(), 'utf8'),
+    cert: Buffer.from(ssm_params.get('/epic-shelter/server-cert').toString() + "\n" +
+        ssm_params.get('/epic-shelter/server-chain').toString(), 'utf8'),
     requestCert: envOptions[secrets.environment].sslOptions.requestCert,
     rejectUnauthorized: envOptions[secrets.environment].sslOptions.rejectUnauthorized,
     ciphers: [
